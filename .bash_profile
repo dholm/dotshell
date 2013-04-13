@@ -44,6 +44,17 @@ export LC_ALL="en_US.UTF-8"
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
+# Load selection of bash-it plugins
+plugins=(base battery dirs fasd git osx python ssh tmux tmuxinator virtualenv)
+plugins_enabled="$(bash-it show plugins | egrep \\[x)"
+for plugin in ${plugins[@]}
+do
+    if ( ! $(echo $plugins_enabled | grep -q $plugin) )
+    then
+        bash-it enable plugin $plugin
+    fi
+done
+
 
 # Setup paths
 function path_setup()
@@ -121,3 +132,4 @@ fi
 
 # Finally load local configuration
 [[ -r $HOME/.bash_profile.local ]] && . $HOME/.bash_profile.local
+
