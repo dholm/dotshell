@@ -34,7 +34,7 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(battery brew cp dircycle extract fasd git-extras git-flow git
          gitfast github osx pip python rsync ssh-agent taskwarrior npm
-         vundle tmux)
+         vundle tmux tmuxinator)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -81,7 +81,7 @@ export GIT_EDITOR=$(which vim)
 export LC_ALL="en_US.UTF-8"
 
 # Steal alias definitions from Bash
-[[ -f $HOME/.bash_aliases ]] && . $HOME/.bash_aliases
+[[ -s $HOME/.bash_aliases ]] && . $HOME/.bash_aliases
 
 # Source any local settings
-[[ -r $HOME/.zshrc.local ]] && . $HOME/.zshrc.local
+[[ -s $HOME/.zshrc.local ]] && . $HOME/.zshrc.local
