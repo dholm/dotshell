@@ -47,6 +47,7 @@ function
 
     function {
         [[ -x $(which npm) ]] && path+=( $(npm prefix --global)/bin )
+        [[ -d $HOME/.cabal/bin ]] && path+=( $HOME/.cabal/bin )
     }
 
     function {
