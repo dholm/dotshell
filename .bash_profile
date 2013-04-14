@@ -45,7 +45,7 @@ export LC_ALL="en_US.UTF-8"
 #shopt -s globstar
 
 # Load selection of bash-it plugins
-plugins=(base battery dirs fasd git osx python ssh tmux tmuxinator virtualenv)
+plugins=(base battery dirs fasd git osx python ssh tmux tmuxinator)
 plugins_enabled="$(bash-it show plugins | egrep \\[x)"
 for plugin in ${plugins[@]}
 do
@@ -71,17 +71,16 @@ function path_setup()
 
         for p in $@
         do
-            path_add_one $p
+            [[ -d $p ]] && path_add_one $p
         done
     }
 
     function path_generic {
         path_add /sbin /bin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin
 
-        [[ -x "$(which npm)" ]] && path_add $(npm prefix --global)/bin
-
-        # Add rvm and gems to the path
-        [[ -d $HOME/.gem/ruby/1.8/bin ]] && path_add $HOME/.gem/ruby/1.8/bin
+        [[ -x "$(which npm 2> /dev/null)" ]] && path_add $(npm prefix --global)/bin
+        path_add $HOME/.gem/ruby/1.8/bin
+        path_add $HOME/.cabal/bin
     }
     path_generic
 
@@ -93,10 +92,10 @@ function path_setup()
     function path_darwin {
         [[ "$(uname)" == "Darwin" ]] || return
 
-        [[ -d /opt/X11 ]] && path_add /opt/X11/bin
+        path_add /opt/X11/bin
 
         local server_prefix="/Applications/Server.app/Contents/ServerRoot"
-        [[ -d $server_prefix ]] && path_add $server_prefix/bin $server_prefix/sbin
+        path_add $server_prefix/bin $server_prefix/sbin
 
         function path_brew {
             [[ -x "$(which brew)" ]] || return
@@ -104,7 +103,7 @@ function path_setup()
             path_add $brew_prefix/bin $brew_prefix/sbin
 
             [[ -x $brew_prefix/bin/ruby ]] && path_add $(brew --prefix ruby)/bin
-            [[ -d $brew_prefix/share/python ]] && path_add $brew_prefix/share/python
+            path_add $brew_prefix/share/python
         }
         path_brew
     }
@@ -116,7 +115,6 @@ path_setup
 # Load dircolor color scheme if available
 if [[ -x $(which dircolors) ]]
 then
-    echo "got it ***"
     if [ -r $HOME/.dircolors ]
     then
         eval "$(dircolors -b $HOME/.dircolors)"
