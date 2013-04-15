@@ -46,6 +46,7 @@ function
     path+=(/sbin /bin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin)
 
     function {
+        [[ -d $HOME/bin ]] && path+=( $HOME/bin )
         [[ -x $(which npm) ]] && path+=( $(npm prefix --global)/bin )
         [[ -d $HOME/.cabal/bin ]] && path+=( $HOME/.cabal/bin )
     }
