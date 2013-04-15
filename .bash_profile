@@ -78,6 +78,8 @@ function path_setup()
     function path_generic {
         path_add /sbin /bin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin
 
+        path_add $HOME/bin
+
         [[ -x "$(which npm 2> /dev/null)" ]] && path_add $(npm prefix --global)/bin
         path_add $HOME/.gem/ruby/1.8/bin
         path_add $HOME/.cabal/bin
