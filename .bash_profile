@@ -65,7 +65,7 @@ function path_setup()
         {
             if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]
             then
-                PATH="${PATH:+"$PATH:"}$1"
+                PATH="${1}:${PATH+"$PATH"}"
             fi
         }
 
@@ -76,7 +76,9 @@ function path_setup()
     }
 
     function path_generic {
-        path_add /sbin /bin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin
+        # Force local to the beginning of the path
+        PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+        path_add /usr/bin /usr/sbin /bin /sbin
 
         path_add $HOME/bin
 
