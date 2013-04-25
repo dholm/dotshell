@@ -42,13 +42,15 @@ source $ZSH/oh-my-zsh.sh
 # Set up the paths
 function
 {
-    typeset -U path
-    path+=(/sbin /bin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin)
+    typeset -Ux path
+    typeset -Ux fpath
+
+    path=(/usr/local/bin /usr/local/sbin /sbin /bin /usr/bin /usr/sbin)
 
     function {
-        [[ -d $HOME/bin ]] && path+=( $HOME/bin )
-        [[ -x $(which npm) ]] && path+=( $(npm prefix --global)/bin )
-        [[ -d $HOME/.cabal/bin ]] && path+=( $HOME/.cabal/bin )
+        [[ -d $HOME/bin ]] && path[1,0]=( $HOME/bin )
+        [[ -x $(which npm) ]] && path[1,0]=( $(npm prefix --global)/bin )
+        [[ -d $HOME/.cabal/bin ]] && path[1,0]=( $HOME/.cabal/bin )
     }
 
     function {
@@ -58,18 +60,21 @@ function
     function {
         [[ "$(uname)" == "Darwin" ]] || return
 
-        [[ -d /opt/X11 ]] && path+=( /opt/X11/bin )
+        [[ -d /usr/local/share/zsh-completions ]] && fpath[1,0]=(/usr/local/share/zsh-completions)
+
+        [[ -d /opt/X11 ]] && path[1,0]=( /opt/X11/bin )
 
         local server_prefix="/Applications/Server.app/Contents/ServerRoot"
-        [[ -d $server_prefix ]] && path+=( $server_prefix/bin $server_prefix/sbin )
+        [[ -d $server_prefix ]] && path[1,0]=( $server_prefix/bin $server_prefix/sbin )
 
         function {
             [[ -x "$(which brew)" ]] || return
-            local brew_prefix="$(brew --prefix)"
-            path+=($brew_prefix/bin $brew_prefix/sbin)
 
-            [[ -x $brew_prefix/bin/ruby ]] && path+=( $(brew --prefix ruby)/bin )
-            [[ -d $brew_prefix/share/python ]] && path+=( $brew_prefix/share/python )
+            local brew_prefix="$(brew --prefix)"
+            path[1,0]=($brew_prefix/bin $brew_prefix/sbin)
+
+            [[ -x $brew_prefix/bin/ruby ]] && path[1,0]=( $(brew --prefix ruby)/bin )
+            [[ -d $brew_prefix/share/python ]] && path[1,0]=( $brew_prefix/share/python )
         }
     }
 }
