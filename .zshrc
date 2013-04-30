@@ -72,6 +72,19 @@ fi
 
 
 ###
+# Load dircolor color scheme if available
+if [[ -x $(which dircolors 2>/dev/null) ]]
+then
+    if [ -r "$HOME/.dircolors" ]
+    then
+        eval "$(dircolors -b $HOME/.dircolors)"
+    else
+        eval "$(dircolors -b)"
+    fi
+fi
+
+
+###
 # Set editor and git editor
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
