@@ -80,6 +80,17 @@ function
 }
 
 
+###
+# Default to UTF-8
+export LANG="en_US.UTF_8"
+export LC_ALL="en_US.UTF-8"
+# Keep the default sort order (e.g. files starting with a '.'
+# should appear at the start of a directory listing.)
+export LC_COLLATE="C"
+# Set the short date to YYYY-MM-DD (test with "date +%c")
+export LC_TIME="sv_SE.UTF-8"
+
+
 # Set editor and git editor
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
