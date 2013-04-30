@@ -91,6 +91,14 @@ export LC_COLLATE="C"
 export LC_TIME="sv_SE.UTF-8"
 
 
+###
+# Shell setup
+if [ "$TERM" = "xterm" ]
+then
+    export TERM="xterm-256color"
+fi
+
+
 # Set editor and git editor
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
