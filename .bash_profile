@@ -10,9 +10,12 @@ export BASH_IT=$HOME/.bash_it
 # location /.bash_it/themes/
 export BASH_IT_THEME='bobby'
 
-# Set my editor and git editor
+
+# Set editor, git editor and pager
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
+export PAGER=$(which vimpager)
+
 
 # Don't check mail when opening terminal.
 unset MAILCHECK
