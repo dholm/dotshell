@@ -85,9 +85,10 @@ fi
 
 
 ###
-# Set editor and git editor
+# Set editor, git editor and pager
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
+export PAGER=$(which vimpager)
 
 
 ###
