@@ -23,6 +23,7 @@ function
         [[ -d $HOME/bin ]] && path[1,0]=( $HOME/bin )
         [[ -x $(which npm 2>/dev/null) ]] && path[1,0]=( $(npm prefix --global)/bin )
         [[ -d $HOME/.cabal/bin ]] && path[1,0]=( $HOME/.cabal/bin )
+        [[ -d /opt/cabal ]] && path[1,0]=( /opt/cabal/bin )
     }
 
     function {
@@ -99,6 +100,13 @@ export LC_ALL="en_US.UTF-8"
 ###
 # Steal alias definitions from Bash
 [[ -s $HOME/.bash_aliases ]] && . $HOME/.bash_aliases
+
+
+###
+# Syntax highlighting
+ZSH_SYNTAX_HIGHLIGHTING=$HOME/.dotfiles/zsh/external/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor root)
+[[ -s $ZSH_SYNTAX_HIGHLIGHTING ]] && . $ZSH_SYNTAX_HIGHLIGHTING
 
 
 ###
