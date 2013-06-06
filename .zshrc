@@ -98,6 +98,12 @@ export LC_ALL="en_US.UTF-8"
 
 
 ###
+# Setup liquidprompt
+LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
+[[ -s $LIQUIDPROMPT ]] && . $LIQUIDPROMPT
+
+
+###
 # Steal alias definitions from Bash
 [[ -s $HOME/.bash_aliases ]] && . $HOME/.bash_aliases
 
