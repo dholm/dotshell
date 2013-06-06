@@ -131,6 +131,11 @@ then
 fi
 
 
+# Setup liquidprompt
+LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
+[[ -s $LIQUIDPROMPT ]] && . $LIQUIDPROMPT
+
+
 # Load alias definitions.
 [[ -f $HOME/.bash_aliases ]] && . $HOME/.bash_aliases
 
