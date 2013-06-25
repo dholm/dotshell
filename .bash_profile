@@ -11,6 +11,18 @@ export BASH_IT=$HOME/.bash_it
 export BASH_IT_THEME='bobby'
 
 
+###
+# Python configuration
+export VIRTUALENV_DISTRIBUTE=true
+export PIP_REQUIRE_VIRTUALENV=true
+export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
+
+function syspip()
+{
+    PIP_REQUIRE_VIRTUALENV="" pip "$@"
+}
+
+
 # Set editor, git editor and pager
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
