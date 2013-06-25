@@ -130,3 +130,4 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor root)
 ###
 # Source any local settings
 [[ -s $HOME/.zshrc.local ]] && . $HOME/.zshrc.local
+[[ -s $HOME/.bash_aliases.local ]] && . $HOME/.bash_aliases.local
