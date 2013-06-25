@@ -154,4 +154,4 @@ LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
 
 # Finally load local configuration
 [[ -r $HOME/.bash_profile.local ]] && . $HOME/.bash_profile.local
-
+[[ -s $HOME/.bash_aliases.local ]] && . $HOME/.bash_aliases.local
