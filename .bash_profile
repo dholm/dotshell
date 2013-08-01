@@ -152,6 +152,10 @@ LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
 [[ -f $HOME/.bash_aliases ]] && . $HOME/.bash_aliases
 
 
+# Setup fontconfig-ultimate
+. $HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh
+
+
 # Finally load local configuration
 [[ -r $HOME/.bash_profile.local ]] && . $HOME/.bash_profile.local
 [[ -s $HOME/.bash_aliases.local ]] && . $HOME/.bash_aliases.local
