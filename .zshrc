@@ -128,6 +128,11 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor root)
 
 
 ###
+# Setup fontconfig-ultimate
+. $HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh
+
+
+###
 # Source any local settings
 [[ -s $HOME/.zshrc.local ]] && . $HOME/.zshrc.local
 [[ -s $HOME/.bash_aliases.local ]] && . $HOME/.bash_aliases.local
