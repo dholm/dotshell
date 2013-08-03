@@ -47,6 +47,7 @@ function
             path[1,0]=($brew_prefix/bin $brew_prefix/sbin)
 
             [[ -x $brew_prefix/bin/ruby ]] && path[1,0]=( $(brew --prefix ruby)/bin )
+            [[ -d $brew_prefix/share/python3 ]] && path[1,0]=( $brew_prefix/share/python3 )
             [[ -d $brew_prefix/share/python ]] && path[1,0]=( $brew_prefix/share/python )
         }
     }
