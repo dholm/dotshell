@@ -1,16 +1,4 @@
 ###
-# Setup oh-my-zsh
-ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="agnoster"
-COMPLETION_WAITING_DOTS="true"
-plugins=(battery brew cp dircycle extract fasd git-extras git-flow git
-         gitfast github osx pip python rsync ssh-agent taskwarrior npm
-         vundle tmux tmuxinator)
-
-source $ZSH/oh-my-zsh.sh
-
-
-###
 # Configure the paths
 function
 {
@@ -47,11 +35,92 @@ function
             path[1,0]=($brew_prefix/bin $brew_prefix/sbin)
 
             [[ -x $brew_prefix/bin/ruby ]] && path[1,0]=( $(brew --prefix ruby)/bin )
-            [[ -d $brew_prefix/share/python3 ]] && path[1,0]=( $brew_prefix/share/python3 )
-            [[ -d $brew_prefix/share/python ]] && path[1,0]=( $brew_prefix/share/python )
+            [[ -x $brew_prefix/bin/python3 ]] && path[1,0]=( $(brew --prefix python3)/bin )
+            [[ -x $brew_prefix/bin/python ]] && path[1,0]=( $(brew --prefix python)/bin )
+            [[ -x $brew_prefix/bin/go ]] && path[1,0]=( $(brew --prefix go)/bin )
         }
     }
 }
+
+
+###
+# Setup antigen
+ADOTDIR=$HOME/.cache/antigen
+source $HOME/.dotfiles/zsh/bundle/antigen/antigen.zsh
+
+# Load bundles from oh-my-zsh
+antigen use oh-my-zsh
+
+antigen bundles <<EOB
+    command-not-found
+
+    # Copy with progress using cpv
+    cp
+
+    # Battery status
+    battery
+
+    # Extract any archive
+    extract
+
+    # Cycle through directory stack with C-<Shift>-<Left>/<Right>
+    dircycle
+
+    # Prefer GNU utils
+    gnu-utils
+EOB
+
+[[ -d $HOME/.vim/bundle/vundle ]] && antigen bundle vundle
+
+(( $+commands[rsync] )) && antigen bundle rsync
+(( $+commands[task] )) && antigen bundle taskwarrior
+(( $+commands[node] )) && antigen bundle node
+(( $+commands[npm] )) && antigen bundle npm
+(( $+commands[fasd] )) && antigen bundle fasd
+(( $+commands[ssh-agent] )) && antigen bundle ssh-agent
+
+
+###
+# Version control systems
+(( $+commands[git] )) && antigen bundles <<EOB
+    git
+    github
+EOB
+(( $+commands[hg] )) && antigen bundle mercurial
+(( $+commands[svn] )) && antigen bundle svn
+
+
+###
+# TMUX
+(( $+commands[tmux] )) && antigen bundles <<EOB
+    tmux
+    tmuxinator
+EOB
+
+
+###
+# Go
+(( $+commands[go] )) && antigen bundles <<EOB
+    go
+    golang
+EOB
+
+
+###
+# Ruby
+(( $+commands[ruby] )) && antigen bundle ruby
+
+
+###
+# OSX settings
+[[ "$(uname)" == "Darwin" ]] && antigen bundle osx
+(( $+commands[brew] )) && antigen bundle brew
+
+
+###
+# Scala
+(( $+commands[scala] )) && antigen bundle scala
+(( $+commands[sbt] )) && antigen bundle sbt
 
 
 ###
@@ -88,14 +157,23 @@ fi
 
 ###
 # Python configuration
-export VIRTUALENV_DISTRIBUTE=true
-export PIP_REQUIRE_VIRTUALENV=true
-export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
+if (( $+commands[python] ))
+then
+    export VIRTUALENV_DISTRIBUTE=true
+    antigen bundle python
 
-function syspip()
-{
-    PIP_REQUIRE_VIRTUALENV="" pip "$@"
-}
+    if (( $+commands[pip] ))
+    then
+        antigen bundle pip
+
+        export PIP_REQUIRE_VIRTUALENV=true
+        export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
+        function syspip()
+        {
+            PIP_REQUIRE_VIRTUALENV="" pip "$@"
+        }
+    fi
+fi
 
 
 ###
@@ -106,14 +184,8 @@ export PAGER=$(which vimpager)
 
 
 ###
-# Set the locale to American English with UTF-8
-export LC_ALL="en_US.UTF-8"
-
-
-###
 # Setup liquidprompt
-LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
-[[ -s $LIQUIDPROMPT ]] && . $LIQUIDPROMPT
+antigen bundle nojhan/liquidprompt
 
 
 ###
@@ -123,9 +195,7 @@ LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
 
 ###
 # Syntax highlighting
-ZSH_SYNTAX_HIGHLIGHTING=$HOME/.dotfiles/zsh/external/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor root)
-[[ -s $ZSH_SYNTAX_HIGHLIGHTING ]] && . $ZSH_SYNTAX_HIGHLIGHTING
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 
 ###
@@ -137,3 +207,8 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor root)
 # Source any local settings
 [[ -s $HOME/.zshrc.local ]] && . $HOME/.zshrc.local
 [[ -s $HOME/.bash_aliases.local ]] && . $HOME/.bash_aliases.local
+
+
+###
+# Apply antigen
+antigen apply
