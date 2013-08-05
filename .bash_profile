@@ -23,12 +23,6 @@ function syspip()
 }
 
 
-# Set editor, git editor and pager
-export EDITOR=$(which vim)
-export GIT_EDITOR=$(which vim)
-export PAGER=$(which vimpager)
-
-
 # Don't check mail when opening terminal.
 unset MAILCHECK
 
@@ -129,6 +123,12 @@ function path_setup()
     path_darwin
 }
 path_setup
+
+
+# Set editor, git editor and pager
+export EDITOR=$(which vim)
+export GIT_EDITOR=$(which vim)
+export PAGER=$(which vimpager)
 
 
 # Load dircolor color scheme if available
