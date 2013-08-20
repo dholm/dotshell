@@ -125,10 +125,18 @@ function path_setup()
 path_setup
 
 
+# Configure less
+export LESS="-R"
+if hash pygmentize &>/dev/null
+then
+    export LESSOPEN="| pygmentize -g %s"
+fi
+
+
 # Set editor, git editor and pager
 export EDITOR=$(which vim)
 export GIT_EDITOR=$(which vim)
-export PAGER=$(which vimpager)
+export PAGER=$(which less)
 
 
 # Load dircolor color scheme if available
