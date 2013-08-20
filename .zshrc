@@ -9,7 +9,7 @@ function
 
     function {
         [[ -d $HOME/bin ]] && path[1,0]=( $HOME/bin )
-        [[ -x $(which npm 2>/dev/null) ]] && path[1,0]=( $(npm prefix --global)/bin )
+        hash npm &>/dev/null && path[1,0]=( $(npm prefix --global)/bin )
         [[ -d $HOME/.cabal/bin ]] && path[1,0]=( $HOME/.cabal/bin )
         [[ -d /opt/cabal ]] && path[1,0]=( /opt/cabal/bin )
     }
@@ -29,7 +29,7 @@ function
         [[ -d $server_prefix ]] && path[1,0]=( $server_prefix/bin $server_prefix/sbin )
 
         function {
-            [[ -x "$(which brew 2>/dev/null)" ]] || return
+            hash brew &>/dev/null || return
 
             local brew_prefix="$(brew --prefix)"
             path[1,0]=($brew_prefix/bin $brew_prefix/sbin)
@@ -144,7 +144,7 @@ fi
 
 ###
 # Load dircolor color scheme if available
-if [[ -x $(which dircolors 2>/dev/null) ]]
+if hash dircolors &>/dev/null
 then
     if [ -r "$HOME/.dircolors" ]
     then
