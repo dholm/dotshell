@@ -91,7 +91,7 @@ function path_setup()
 
         path_add $HOME/bin
 
-        [[ -x "$(which npm 2> /dev/null)" ]] && path_add $(npm prefix --global)/bin
+        hash npm &>/dev/null && path_add "$(npm prefix --global)/bin"
         path_add $HOME/.gem/ruby/1.8/bin
         path_add $HOME/.cabal/bin
     }
@@ -111,7 +111,7 @@ function path_setup()
         path_add $server_prefix/bin $server_prefix/sbin
 
         function path_brew {
-            [[ -x "$(which brew)" ]] || return
+            hash brew &>/dev/null || return
             local brew_prefix="$(brew --prefix)"
             path_add $brew_prefix/bin $brew_prefix/sbin
 
@@ -132,7 +132,7 @@ export PAGER=$(which vimpager)
 
 
 # Load dircolor color scheme if available
-if [[ -x $(which dircolors) ]]
+if hash dircolors &>/dev/null
 then
     if [ -r $HOME/.dircolors ]
     then
