@@ -178,7 +178,7 @@ fi
 
 ###
 # Configure less
-export LESS="-R"
+export LESS="-MiR"
 if hash pygmentize &>/dev/null
 then
     export LESSOPEN="| pygmentize -g %s"
