@@ -4,7 +4,7 @@
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
 
 # Path to the bash it configuration
-export BASH_IT=$HOME/.bash_it
+export BASH_IT=$HOME/.bash.d/bash_it
 
 # Lock and Load a custom theme file
 # location /.bash_it/themes/
