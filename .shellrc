@@ -1,0 +1,166 @@
+# Local Variables:
+# mode: shell-script
+# End:
+
+. "$HOME/.local/lib/sh/shell.sh"
+. "$HOME/.local/lib/sh/path.sh"
+. "$HOME/.local/lib/sh/os.sh"
+
+
+function _path_setup
+{
+    path_prepend /usr/local/bin
+    path_prepend /usr/local/sbin
+
+    has_binary npm && path_prepend "$(npm prefix --global)/bin"
+    path_prepend "/opt/cabal/bin"
+
+    if is_darwin
+    then
+        path_prepend /opt/X11/bin
+
+        local server_prefix="/Applications/Server.app/Contents/ServerRoot"
+        path_prepend "$server_prefix/bin"
+        path_prepend "$server_prefix/sbin"
+
+        if has_binary brew
+        then
+            local brew_prefix="$(brew --prefix)"
+            path_prepend "$brew_prefix/bin"
+            path_prepend "$brew_prefix/sbin"
+
+            for binary in ruby python python 3 go
+            do
+                is_executable "${brew_prefix}/bin/${binary}" && path_prepend "$(brew --prefix ${binary})/bin"
+            done
+        fi
+    fi
+
+    path_prepend "$HOME/.cabal/bin"
+    path_prepend "$HOME/bin"
+}
+_path_setup
+
+
+function _coding_setup
+{
+    export LANG="en_US.UTF_8"
+    export LC_ALL="en_US.UTF-8"
+    # Keep the default sort order (e.g. files starting with a '.'
+    # should appear at the start of a directory listing.)
+    export LC_COLLATE="C"
+    # Set the short date to YYYY-MM-DD (test with "date +%c")
+    export LC_TIME="sv_SE.UTF-8"
+}
+_coding_setup
+
+
+function _terminal_setup
+{
+    if [ "$TERM" = "xterm" ]
+    then
+        export TERM="xterm-256color"
+    fi
+}
+_terminal_setup
+
+
+function _dircolor_setup
+{
+    local dircolors_path="$HOME/.dircolors"
+
+    if is_readable "${dircolors_path}"
+    then
+        eval "$(dircolors -b ${dircolors_path})"
+    else
+        eval "$(dircolors -b)"
+    fi
+}
+has_binary dircolors && _dircolor_setup
+
+
+function _python_setup
+{
+    export VIRTUALENV_DISTRIBUTE=true
+
+    if has_binary pip
+    then
+        export PIP_REQUIRE_VIRTUALENV=true
+        export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
+        function syspip()
+        {
+            PIP_REQUIRE_VIRTUALENV="" pip "$@"
+        }
+    fi
+}
+has_binary python && _python_setup
+
+
+function _ruby_setup
+{
+    local rvm_script="$HOME/.rvm/scripts/rvm"
+    is_readable "${rvm_script}" && . "${rvm_script}"
+}
+_ruby_setup
+
+
+function _less_setup
+{
+    export LESS="-MiR"
+    if has_binary pygmentize
+    then
+        export LESSOPEN="| pygmentize -g %s"
+    fi
+
+    export PAGER=$(path_to less)
+}
+has_binary less && _less_setup
+
+
+function _editor_setup
+{
+    local editor=""
+
+    if has_binary emacs
+    then
+        editor="$(path_to emacsclient)"
+        has_binary vi && export ALTERNATE_EDITOR="$(path_to vi)"
+    elif has_binary vim
+    then
+        editor=$(path_to vim)
+    fi
+
+    export EDITOR="${editor:-vi}"
+    export VISUAL="${EDITOR}"
+    export GIT_EDITOR="${EDITOR}"
+}
+_editor_setup
+
+
+function _alias_setup
+{
+    local alias_file="$HOME/.shell_aliases"
+    is_readable "${alias_file}" && . "${alias_file}"
+}
+_alias_setup
+
+
+function _fontconfig_setup
+{
+    local infinality_settings="$HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh"
+    is_readable "${infinality_settings}" && . "${infinality_settings}"
+}
+_fontconfig_setup
+
+
+function _local_setup
+{
+    local local_profile="$HOME/.shell_profile.local"
+    local local_aliases="$HOME/.shell_aliases.local"
+    is_readable "${local_profile}" && . "${local_profile}"
+    is_readable "${local_aliases}" && . "${local_aliases}"
+}
+_local_setup
+
+
+return 0
