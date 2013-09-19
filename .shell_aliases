@@ -1,7 +1,14 @@
-# Set up the alias for managing dotfiles
+# Local Variables:
+# mode: shell-script
+# End:
+
+###
+# Set up the alias for managing dotfiles.
 alias dotfiles='git --git-dir=$HOME/.dotfiles.git/ --work-tree=$HOME'
 
-# Use colors for coreutils
+
+###
+# Use colors for coreutils.
 if ( ls --color 1>/dev/null 2>&1 )
 then
     alias ls='ls --color=auto'
@@ -12,3 +19,8 @@ fi
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+
+
+###
+# Launch emacs via emacsclient so that Emacs server is utilized.
+alias emacs="emacsclient -nw"
