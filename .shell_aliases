@@ -20,7 +20,3 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-
-###
-# Launch emacs via emacsclient so that Emacs server is utilized.
-alias emacs="emacsclient -nw"
