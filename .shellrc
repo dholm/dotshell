@@ -123,8 +123,9 @@ function _editor_setup
 
     if has_binary emacs
     then
-        export ALTERNATIVE_EDITOR="$(path_to emacs) --daemon --no-window-system"
-        editor="$(path_to emacsclient) -nw"
+        local alternative_editor="$(path_to vi)"
+        has_binary vim && alternative_editor="$(path_to vim)"
+        editor="$(path_to emacsclient) -a \"${alternative_editor}\" -nw"
     elif has_binary vim
     then
         editor=$(path_to vim)
