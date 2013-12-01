@@ -141,6 +141,8 @@ function _fontconfig_setup
 }
 _fontconfig_setup
 
+# Load SSH module
+. "$HOME/.ssh/sh"
 
 function _local_setup
 {
