@@ -1,11 +1,8 @@
-# Local Variables:
-# mode: shell-script
-# End:
-
+. "$HOME/.local/lib/sh/print.sh"
 . "$HOME/.local/lib/sh/shell.sh"
 . "$HOME/.local/lib/sh/path.sh"
 . "$HOME/.local/lib/sh/os.sh"
-
+. "$HOME/.local/lib/sh/alias.sh"
 
 function _path_setup
 {
@@ -41,7 +38,6 @@ function _path_setup
 }
 _path_setup
 
-
 function _coding_setup
 {
     export LANG="en_US.UTF_8"
@@ -54,7 +50,6 @@ function _coding_setup
 }
 _coding_setup
 
-
 function _terminal_setup
 {
     if [ "$TERM" = "xterm" ]
@@ -63,7 +58,6 @@ function _terminal_setup
     fi
 }
 _terminal_setup
-
 
 function _dircolor_setup
 {
@@ -77,7 +71,6 @@ function _dircolor_setup
     fi
 }
 has_binary dircolors && _dircolor_setup
-
 
 function _python_setup
 {
@@ -95,14 +88,12 @@ function _python_setup
 }
 has_binary python && _python_setup
 
-
 function _ruby_setup
 {
     local rvm_script="$HOME/.rvm/scripts/rvm"
     is_readable "${rvm_script}" && . "${rvm_script}"
 }
 _ruby_setup
-
 
 function _less_setup
 {
@@ -115,7 +106,6 @@ function _less_setup
     export PAGER=$(path_to less)
 }
 has_binary less && _less_setup
-
 
 function _editor_setup
 {
@@ -137,14 +127,12 @@ function _editor_setup
 }
 _editor_setup
 
-
 function _alias_setup
 {
     local alias_file="$HOME/.shell_aliases"
     is_readable "${alias_file}" && . "${alias_file}"
 }
 _alias_setup
-
 
 function _fontconfig_setup
 {
@@ -163,5 +151,8 @@ function _local_setup
 }
 _local_setup
 
-
 return 0
+
+# Local Variables:
+# mode: shell-script
+# End:
