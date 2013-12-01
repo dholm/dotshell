@@ -2,6 +2,8 @@ function path_remove
 {
     local dir="${1}"
 
+    debug "Removing '${dir}' from path"
+
     if is_zsh
     then
         local idx=${path[(i)${dir}]}
@@ -16,7 +18,13 @@ function path_prepend
 {
     local dir="${1}"
 
-    path_remove "${dir}"
+    debug "Prepending '${dir}' to path"
+
+    if in_path "${dir}"
+    then
+        path_remove "${dir}"
+    fi
+
     if is_zsh
     then
         path[1,0]="${dir}"
@@ -32,6 +40,8 @@ function path_prepend
 function path_append
 {
     local dir="${1}"
+
+    debug "Appending '${dir}' to path"
 
     path_remove "${dir}"
     if is_zsh
@@ -88,4 +98,10 @@ function path_to
     then
         which "${binary}"
     fi
+}
+
+function in_path
+{
+    local dir="${1}"
+    [[ ":$PATH:" == *":${dir}:"* ]]
 }
