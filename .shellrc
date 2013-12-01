@@ -1,5 +1,6 @@
 . "$HOME/.local/lib/sh/print.sh"
 . "$HOME/.local/lib/sh/shell.sh"
+. "$HOME/.local/lib/sh/eval.sh"
 . "$HOME/.local/lib/sh/path.sh"
 . "$HOME/.local/lib/sh/os.sh"
 . "$HOME/.local/lib/sh/alias.sh"
@@ -28,7 +29,10 @@ function _path_setup
 
             for binary in ruby python python 3 go
             do
-                is_executable "${brew_prefix}/bin/${binary}" && path_prepend "$(brew --prefix ${binary})/bin"
+                if is_executable "${brew_prefix}/bin/${binary}"
+                then
+                    path_prepend "$(brew --prefix ${binary})/bin"
+                fi
             done
         fi
     fi
@@ -36,7 +40,7 @@ function _path_setup
     path_prepend "$HOME/.cabal/bin"
     path_prepend "$HOME/bin"
 }
-_path_setup
+eval_safe _path_setup
 
 function _coding_setup
 {
@@ -48,7 +52,7 @@ function _coding_setup
     # Set the short date to YYYY-MM-DD (test with "date +%c")
     export LC_TIME="sv_SE.UTF-8"
 }
-_coding_setup
+eval_safe _coding_setup
 
 function _terminal_setup
 {
@@ -57,7 +61,7 @@ function _terminal_setup
         export TERM="xterm-256color"
     fi
 }
-_terminal_setup
+eval_safe _terminal_setup
 
 function _dircolor_setup
 {
@@ -70,7 +74,7 @@ function _dircolor_setup
         eval "$(dircolors -b)"
     fi
 }
-has_binary dircolors && _dircolor_setup
+has_binary dircolors && eval_safe _dircolor_setup
 
 function _python_setup
 {
@@ -86,14 +90,14 @@ function _python_setup
         }
     fi
 }
-has_binary python && _python_setup
+has_binary python && eval_safe _python_setup
 
 function _ruby_setup
 {
     local rvm_script="$HOME/.rvm/scripts/rvm"
-    is_readable "${rvm_script}" && . "${rvm_script}"
+    source_safe "${rvm_script}"
 }
-_ruby_setup
+eval_safe _ruby_setup
 
 function _less_setup
 {
@@ -105,7 +109,7 @@ function _less_setup
 
     export PAGER=$(path_to less)
 }
-has_binary less && _less_setup
+has_binary less && eval_safe _less_setup
 
 function _editor_setup
 {
@@ -125,33 +129,33 @@ function _editor_setup
     export VISUAL="${EDITOR}"
     export GIT_EDITOR="${EDITOR}"
 }
-_editor_setup
+eval_safe _editor_setup
 
 function _alias_setup
 {
     local alias_file="$HOME/.shell_aliases"
-    is_readable "${alias_file}" && . "${alias_file}"
+    source_safe "${alias_file}"
 }
-_alias_setup
+eval_safe _alias_setup
 
 function _fontconfig_setup
 {
     local infinality_settings="$HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh"
-    is_readable "${infinality_settings}" && . "${infinality_settings}"
+    source_safe "${infinality_settings}"
 }
-_fontconfig_setup
+eval_safe _fontconfig_setup
 
 # Load SSH module
-. "$HOME/.ssh/sh"
+source_safe "$HOME/.ssh/sh"
 
 function _local_setup
 {
     local local_profile="$HOME/.shell_profile.local"
     local local_aliases="$HOME/.shell_aliases.local"
-    is_readable "${local_profile}" && . "${local_profile}"
-    is_readable "${local_aliases}" && . "${local_aliases}"
+    source_safe "${local_profile}"
+    source_safe "${local_aliases}"
 }
-_local_setup
+eval_safe _local_setup
 
 return 0
 
