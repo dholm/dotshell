@@ -37,6 +37,8 @@ function _path_setup
         fi
     fi
 
+    path_prepend "$HOME/.local/bin"
+    path_prepend "$HOME/.cask/bin"
     path_prepend "$HOME/.cabal/bin"
     path_prepend "$HOME/bin"
 }
