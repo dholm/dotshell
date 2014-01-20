@@ -152,14 +152,12 @@ source_safe "$HOME/.ssh/sh"
 
 function _local_setup
 {
-    local local_profile="$HOME/.shell_profile.local"
+    local local_profile="$HOME/.shellrc.local"
     local local_aliases="$HOME/.shell_aliases.local"
     source_safe "${local_profile}"
     source_safe "${local_aliases}"
 }
 eval_safe _local_setup
-
-return 0
 
 # Local Variables:
 # mode: shell-script
