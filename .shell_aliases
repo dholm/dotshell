@@ -19,3 +19,8 @@ fi
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+
+
+###
+# Nicer versions of common utils.
+alias pl='ps -o pid,ppid,pgid,lwp,nlwp,psr,cls,pri,state,vsz,rss,bsdstart,bsdtime,user,cmd'
