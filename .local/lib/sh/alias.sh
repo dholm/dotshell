@@ -1,16 +1,14 @@
-function alias_add
-{
+alias::add() {
     local cmd="${1}"
     local _alias="${2}"
 
-    debug "Aliasing ${cmd} to '${_alias}'"
+    print::debug "Aliasing ${cmd} to '${_alias}'"
     alias ${cmd}="${_alias}"
 }
 
-function alias_remove
-{
+alias::remove() {
     local cmd="${1}"
 
-    debug "Removing alias ${cmd}"
+    print::debug "Removing alias ${cmd}"
     unalias ${cmd}
 }

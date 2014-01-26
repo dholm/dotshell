@@ -1,29 +1,26 @@
 . "${HOME}/.shellrc"
 
 
-function _setup_zsh_completions
-{
+zshrc::zsh_completions() {
     local zsh_completions="/usr/local/share/zsh-completions"
-    is_readable ${zsh_completions} && fpath[1,0]=( ${zsh_completions} )
+    file::is_readable ${zsh_completions} && fpath[1,0]=( ${zsh_completions} )
 }
-_setup_zsh_completions
+shell::eval zshrc::zsh_completions
 
 
-function _setup_antigen
-{
+zshrc::antigen() {
     ###
     # Setup antigen
     export ADOTDIR="$HOME/.cache/antigen"
-    source "$HOME/.zsh.d/bundle/antigen/antigen.zsh"
+    shell::source "$HOME/.zsh.d/bundle/antigen/antigen.zsh"
 
     # Load bundles from oh-my-zsh
     antigen use oh-my-zsh
 }
-_setup_antigen
+shell::eval zshrc::antigen
 
 
-function _setup_antigen_bundles
-{
+zshrc::antigen_bundles() {
     antigen bundles <<EOB
         command-not-found
 
@@ -43,55 +40,51 @@ function _setup_antigen_bundles
         gnu-utils
 EOB
 
-    is_directory "$HOME/.vim/bundle/vundle" && antigen bundle vundle
+    file::is_directory "$HOME/.vim/bundle/vundle" && antigen bundle vundle
 
-    for binary in rsync node npm fasd ssh-agent scala sbt ruby svn python pip
-    do
-        has_binary "${binary}" && antigen bundle "${binary}"
+    for binary in rsync node npm fasd ssh-agent scala sbt ruby svn python pip; do
+        path::has_binary "${binary}" && antigen bundle "${binary}"
     done
 
-    has_binary task && antigen bundle taskwarrior
-    has_binary go && antigen bundles <<EOB
+    path::has_binary task && antigen bundle taskwarrior
+    path::has_binary go && antigen bundles <<EOB
         go
         golang
 EOB
-    has_binary tmux && antigen bundles <<EOB
+    path::has_binary tmux && antigen bundles <<EOB
         tmux
         tmuxinator
 EOB
-    has_binary git && antigen bundles <<EOB
+    path::has_binary git && antigen bundles <<EOB
         git
         github
 EOB
-    has_binary hg && antigen bundle mercurial
-    is_darwin && antigen bundle osx
-    has_binary brew && antigen bundle brew
+    path::has_binary hg && antigen bundle mercurial
+    os::is_darwin && antigen bundle osx
+    path::has_binary brew && antigen bundle brew
 }
-_setup_antigen_bundles
+shell::eval zshrc::antigen_bundles
 
 
-function _setup_liquidprompt
-{
+zshrc::liquidprompt() {
     antigen bundle nojhan/liquidprompt
 }
-_setup_liquidprompt
+shell::eval zshrc::liquidprompt
 
 
-function _setup_syntax_highlighting
-{
+zshrc::syntax_highlighting() {
     antigen bundle zsh-users/zsh-syntax-highlighting
 }
-_setup_syntax_highlighting
+shell::eval zshrc::syntax_highlighting
 
 
-function _setup_local_zsh
-{
+zshrc::local() {
     local local_zshrc="$HOME/.zshrc.local"
     local local_zsh_aliases="$HOME/.zsh_aliases.local"
-    is_readable "${local_zshrc}" && . "${local_zshrc}"
-    is_readable "${local_zsh_aliases}" && . "${local_zsh_aliases}"
+    shell::source "${local_zshrc}"
+    shell::source "${local_zsh_aliases}"
 }
-_setup_local_zsh
+shell::eval zshrc::local
 
 
 ###

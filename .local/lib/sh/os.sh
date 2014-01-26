@@ -1,9 +1,7 @@
-function is_linux
-{
+os::is_linux() {
     test "$(uname)" = "Linux"
 }
 
-function is_darwin
-{
+os::is_darwin() {
     test "$(uname)" = "Darwin"
 }

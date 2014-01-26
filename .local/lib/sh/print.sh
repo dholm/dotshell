@@ -1,5 +1,4 @@
-function pen_color
-{
+print::pen_color() {
     local fg_bg="${1}"
     local color="${2}"
 
@@ -19,8 +18,7 @@ function pen_color
     esac
 }
 
-function pen_format
-{
+print::pen_format() {
     local format="${1}"
 
     case "${format}" in
@@ -30,7 +28,37 @@ function pen_format
     esac
 }
 
-function error { echo -e "$(pen_format bold)$(pen_color fg red)${*}$(pen_format normal)"; }
-function warning { echo -e "$(pen_color fg yellow)${*}${pen_format normal}"; }
-function info { echo -e "$(pen_color fg green)${*}$(pen_format normal)"; }
-function debug { ((DEBUG)) && echo -e "$(pen_color fg grey)${*}$(pen_format normal)"; }
+print::error() {
+    echo -e "\
+$(print::pen_format bold)\
+$(print::pen_color fg red)\
+$(eval ${caller}):\
+${*}\
+$(print::pen_format normal)"
+}
+
+print::warning() {
+    echo -e "\
+$(print::pen_color fg yellow)\
+$(eval ${caller}):\
+${*}\
+${print::pen_format normal}"
+}
+
+print::info() {
+    echo -e "\
+$(print::pen_color fg green)\
+$(eval ${caller}):\
+${*}\
+$(print::pen_format normal)"
+}
+
+print::debug() {
+    if ((DEBUG)); then
+        echo -e "\
+$(print::pen_color fg grey)\
+$(eval ${caller}):\
+${*}\
+$(print::pen_format normal)"
+    fi
+}

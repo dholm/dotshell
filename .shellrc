@@ -1,51 +1,45 @@
 . "$HOME/.local/lib/sh/print.sh"
 . "$HOME/.local/lib/sh/shell.sh"
-. "$HOME/.local/lib/sh/eval.sh"
+. "$HOME/.local/lib/sh/file.sh"
 . "$HOME/.local/lib/sh/path.sh"
 . "$HOME/.local/lib/sh/os.sh"
 . "$HOME/.local/lib/sh/alias.sh"
 
-function _path_setup
-{
-    path_prepend /usr/local/bin
-    path_prepend /usr/local/sbin
+shellrc::path_setup() {
+    path::prepend /usr/local/bin
+    path::prepend /usr/local/sbin
 
-    has_binary npm && path_prepend "$(npm prefix --global)/bin"
-    path_prepend "/opt/cabal/bin"
+    path::has_binary npm && path::prepend "$(npm prefix --global)/bin"
+    path::prepend "/opt/cabal/bin"
 
-    if is_darwin
-    then
-        path_prepend /opt/X11/bin
+    if os::is_darwin; then
+        path::prepend /opt/X11/bin
 
         local server_prefix="/Applications/Server.app/Contents/ServerRoot"
-        path_prepend "$server_prefix/bin"
-        path_prepend "$server_prefix/sbin"
+        path::prepend "$server_prefix/bin"
+        path::prepend "$server_prefix/sbin"
 
-        if has_binary brew
-        then
+        if path::has_binary brew; then
             local brew_prefix="$(brew --prefix)"
-            path_prepend "$brew_prefix/bin"
-            path_prepend "$brew_prefix/sbin"
+            path::prepend "$brew_prefix/bin"
+            path::prepend "$brew_prefix/sbin"
 
-            for binary in ruby python python 3 go
-            do
-                if is_executable "${brew_prefix}/bin/${binary}"
-                then
-                    path_prepend "$(brew --prefix ${binary})/bin"
+            for binary in ruby python python3 go; do
+                if file::is_executable "${brew_prefix}/bin/${binary}"; then
+                    path::prepend "$(brew --prefix ${binary})/bin"
                 fi
             done
         fi
     fi
 
-    path_prepend "$HOME/.local/bin"
-    path_prepend "$HOME/.cask/bin"
-    path_prepend "$HOME/.cabal/bin"
-    path_prepend "$HOME/bin"
+    path::prepend "$HOME/.local/bin"
+    path::prepend "$HOME/.cask/bin"
+    path::prepend "$HOME/.cabal/bin"
+    path::prepend "$HOME/bin"
 }
-eval_safe _path_setup
+shell::eval shellrc::path_setup
 
-function _coding_setup
-{
+shellrc::coding_setup() {
     export LANG="en_US.UTF_8"
     export LC_ALL="en_US.UTF-8"
     # Keep the default sort order (e.g. files starting with a '.'
@@ -54,110 +48,87 @@ function _coding_setup
     # Set the short date to YYYY-MM-DD (test with "date +%c")
     export LC_TIME="sv_SE.UTF-8"
 }
-eval_safe _coding_setup
+shell::eval shellrc::coding_setup
 
-function _terminal_setup
-{
-    if [ "$TERM" = "xterm" ]
-    then
+shellrc::terminal_setup() {
+    if [ "$TERM" = "xterm" ]; then
         export TERM="xterm-256color"
     fi
 }
-eval_safe _terminal_setup
+shell::eval shellrc::terminal_setup
 
-function _dircolor_setup
-{
+shellrc::dircolor_setup() {
     local dircolors_path="$HOME/.dircolors"
 
-    if is_readable "${dircolors_path}"
-    then
+    if file::is_readable "${dircolors_path}"; then
         eval "$(dircolors -b ${dircolors_path})"
     else
         eval "$(dircolors -b)"
     fi
 }
-has_binary dircolors && eval_safe _dircolor_setup
+path::has_binary dircolors && shell::eval shellrc::dircolor_setup
 
-function _python_setup
-{
+shellrc::python_setup() {
     export VIRTUALENV_DISTRIBUTE=true
 
-    if has_binary pip
-    then
+    if path::has_binary pip; then
         export PIP_REQUIRE_VIRTUALENV=true
         export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
-        function syspip()
-        {
-            PIP_REQUIRE_VIRTUALENV="" pip "$@"
+        syspip() {
+            local args="${@}"
+            local env
+            env=( PIP_REQUIRE_VIRTUALENV="" )
+            exec::safe $(shell::as_array env) $(path::to pip) ${args}
         }
     fi
 }
-has_binary python && eval_safe _python_setup
+path::has_binary python && shell::eval shellrc::python_setup
 
-function _ruby_setup
-{
+shellrc::ruby_setup() {
     local rvm_script="$HOME/.rvm/scripts/rvm"
-    source_safe "${rvm_script}"
+    shell::source "${rvm_script}"
 }
-eval_safe _ruby_setup
+shell::eval shellrc::ruby_setup
 
-function _less_setup
-{
-    export LESS="-MiR"
-    if has_binary pygmentize
-    then
-        export LESSOPEN="| pygmentize -g %s"
-    fi
-
-    export PAGER=$(path_to less)
-}
-has_binary less && eval_safe _less_setup
-
-function _editor_setup
-{
+shellrc::editor_setup() {
     local editor=""
 
-    if has_binary emacs
-    then
-        local alternative_editor="$(path_to vi)"
-        has_binary vim && alternative_editor="$(path_to vim)"
-        editor="$(path_to emacsclient) -a \"${alternative_editor}\" -nw"
-    elif has_binary vim
-    then
-        editor=$(path_to vim)
+    if path::has_binary emacs; then
+        local alternative_editor="$(path::to vi)"
+        path::has_binary vim && alternative_editor="$(path::to vim)"
+        editor="$(path::to emacsclient) -a \"${alternative_editor}\" -nw"
+    elif path::has_binary vim; then
+        editor="$(path::to vim)"
     fi
 
     export EDITOR="${editor:-vi}"
     export VISUAL="${EDITOR}"
     export GIT_EDITOR="${EDITOR}"
 }
-eval_safe _editor_setup
+shell::eval shellrc::editor_setup
 
-function _alias_setup
-{
+shellrc::alias_setup() {
     local alias_file="$HOME/.shell_aliases"
-    source_safe "${alias_file}"
+    shell::source "${alias_file}"
 }
-eval_safe _alias_setup
+shell::eval shellrc::alias_setup
 
-function _fontconfig_setup
-{
+shellrc::fontconfig_setup() {
     local infinality_settings="$HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh"
-    source_safe "${infinality_settings}"
+    shell::source "${infinality_settings}"
 }
-eval_safe _fontconfig_setup
+shell::eval shellrc::fontconfig_setup
 
 # Load SSH module
-source_safe "$HOME/.ssh/sh"
+path::has_binary ssh && shell::source "$HOME/.ssh/sh"
 
-function _local_setup
-{
+shellrc::local_setup() {
     local local_profile="$HOME/.shellrc.local"
     local local_aliases="$HOME/.shell_aliases.local"
-    source_safe "${local_profile}"
-    source_safe "${local_aliases}"
+    shell::source "${local_profile}"
+    shell::source "${local_aliases}"
 }
-eval_safe _local_setup
+shell::eval shellrc::local_setup
 
 # Local Variables:
 # mode: shell-script

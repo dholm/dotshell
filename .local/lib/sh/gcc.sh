@@ -1,7 +1,10 @@
-function gcc_dump_defines() {
-    local gcc_bin="${1}"
+gcc::dump_defines() {
+    local gcc_bin="${1}"; shift
+    local gcc_args="${*}"
 
-    debug "${fn}(${args}): Begin"
-    ${gcc_bin} -dM -E - </dev/null
-    debug "${fn}(${args}): End ($?)"
+    print::debug "(${gcc_bin} ${gcc_args}): Begin"
+    ${gcc_bin} ${gcc_args} -dM -E - </dev/null
+    local retval="$?"
+    print::debug "(${gcc_bin} ${gcc_args}): End (${retval})"
+    return ${retval}
 }
