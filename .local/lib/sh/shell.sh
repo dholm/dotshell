@@ -8,12 +8,15 @@ shell::is_bash() {
 
 export callee
 export caller
+export this
 if shell::is_zsh; then
     callee='echo ${funcstack[0]}'
     caller='echo ${funcstack[1]}'
+    this='echo ${0}'
 elif shell::is_bash; then
     callee='echo ${FUNCNAME[0]}'
     caller='echo ${FUNCNAME[1]}'
+    this='echo ${BASH_SOURCE}'
 fi
 
 shell::as_array() {
