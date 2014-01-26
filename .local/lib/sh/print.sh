@@ -34,7 +34,7 @@ $(print::pen_format bold)\
 $(print::pen_color fg red)\
 $(eval ${caller}):\
 ${*}\
-$(print::pen_format normal)"
+$(print::pen_format normal)" 1>&2
 }
 
 print::warning() {
