@@ -13,6 +13,7 @@ shellrc::path_setup() {
     path::prepend "/opt/cabal/bin"
 
     if os::is_darwin; then
+        path::prepend /usr/texbin
         path::prepend /opt/X11/bin
 
         local server_prefix="/Applications/Server.app/Contents/ServerRoot"
