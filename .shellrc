@@ -77,9 +77,9 @@ shellrc::python_setup() {
         export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
         syspip() {
             local args="${@}"
-            local env
-            env=( PIP_REQUIRE_VIRTUALENV="" )
-            exec::safe $(shell::as_array env) $(path::to pip) ${args}
+            local pipenv
+            pipenv=( PIP_REQUIRE_VIRTUALENV="" )
+            shell::exec_env $(shell::as_array pipenv) $(path::to pip) ${args}
         }
     fi
 }
