@@ -120,6 +120,11 @@ shellrc::fontconfig_setup() {
 }
 shell::eval shellrc::fontconfig_setup
 
+shellrc::tmux_setup() {
+    path::has_binary tmuxifier && eval "$(tmuxifier init -)"
+}
+path::has_binary tmux && shell::eval shellrc::tmux_setup
+
 # Load SSH module
 path::has_binary ssh && shell::source "$HOME/.ssh/sh"
 # Load less utilities
