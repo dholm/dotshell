@@ -10,7 +10,7 @@ export callee
 export caller
 export this
 if shell::is_zsh; then
-    callee='echo ${funcstack[0]}'
+    callee='echo ${0}'
     caller='echo ${funcstack[1]}'
     this='echo ${0}'
 elif shell::is_bash; then
