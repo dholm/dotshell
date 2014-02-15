@@ -57,12 +57,12 @@ shell::exec_env() {
         env=( "${(P)${1}[@]}" )
     fi; shift
     local cmd="${1}"; shift
-    local flags="${*}"
+    local args="${*}"
 
-    print::debug "(env={${env[@]}} cmd=${cmd} flags={${flags}}): Begin"
-    /usr/bin/env "${env[@]}" ${cmd} ${flags}
+    print::debug "(env={${env[@]}} cmd=${cmd} args={${args}}): Begin"
+    /usr/bin/env "${env[@]}" ${cmd} ${args}
     local retval="$?"
-    print::debug "(env={${env[@]}} cmd=${cmd} flags={${flags}}): End (${retval})"
+    print::debug "(env={${env[@]}} cmd=${cmd} args={${args}}): End (${retval})"
     return ${retval}
 }
 
@@ -70,6 +70,9 @@ shell::exec() {
     local cmd="${1}"; shift
     local args="${*}"
 
-    local nil_env; nil_env=( )
-    shell::exec_env $(shell::as_array nil_env) ${cmd} ${args}
+    print::debug "(cmd=${cmd} args={${args}}): Begin"
+    eval ${cmd} ${args}
+    local retval="$?"
+    print::debug "(cmd=${cmd} args={${args}}): End"
+    return ${retval}
 }
