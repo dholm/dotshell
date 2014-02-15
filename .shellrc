@@ -4,6 +4,7 @@
 . "$HOME/.local/lib/sh/path.sh"
 . "$HOME/.local/lib/sh/os.sh"
 . "$HOME/.local/lib/sh/alias.sh"
+. "$HOME/.local/lib/sh/editor.sh"
 
 shellrc::path_setup() {
     path::prepend /usr/local/bin
@@ -92,17 +93,7 @@ shellrc::ruby_setup() {
 shell::eval shellrc::ruby_setup
 
 shellrc::editor_setup() {
-    local editor=""
-
-    if path::has_binary emacs; then
-        local alternative_editor="$(path::to vi)"
-        path::has_binary vim && alternative_editor="$(path::to vim)"
-        editor="$(path::to emacsclient) -a \"${alternative_editor}\" -nw"
-    elif path::has_binary vim; then
-        editor="$(path::to vim)"
-    fi
-
-    export EDITOR="${editor:-vi}"
+    editor::setup
     export VISUAL="${EDITOR}"
     export GIT_EDITOR="${EDITOR}"
 }
