@@ -72,6 +72,16 @@ shellrc::dircolor_setup() {
 }
 path::has_binary dircolors && shell::eval shellrc::dircolor_setup
 
+shellrc::perl_setup() {
+    path::prepend "${HOME}/perl5/bin"
+
+    local perlbrew_init="${HOME}/perl5/perlbrew/etc/bashrc"
+    if file::is_readable "${perlbrew_init}"; then
+        shell::source "${perlbrew_init}"
+    fi
+}
+path::has_binary perl && shell::eval shellrc::perl_setup
+
 shellrc::python_setup() {
     export VIRTUALENV_DISTRIBUTE=true
 
