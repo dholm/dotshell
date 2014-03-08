@@ -7,6 +7,8 @@
 . "$HOME/.local/lib/sh/mount.sh"
 . "$HOME/.local/lib/sh/alias.sh"
 . "$HOME/.local/lib/sh/editor.sh"
+. "$HOME/.local/lib/sh/url.sh"
+. "$HOME/.local/lib/sh/connect.sh"
 
 shellrc::path_setup() {
     path::prepend /usr/local/bin
