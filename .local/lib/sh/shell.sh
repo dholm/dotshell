@@ -83,5 +83,17 @@ shell::exec() {
 }
 
 shell::args_parse() {
-    local short="${1}"
+    local short="${1}"; shift
+    local long="${1}"; shift
+
+    print::debug "short=${short} long=${long} args={${@}}"
+    local get_opts="getopt -o ${short} --long ${long}"
+    get_opts=$(shell::eval ${get_opts} -- "${@}")
+    if [ ${?} -lt 0 ]; then
+        return 1
+    fi
+
+    print::debug "args={ ${get_opts} }"
+    echo "set -- ${get_opts}"
+    return ${?}
 }
