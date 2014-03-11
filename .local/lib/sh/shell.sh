@@ -1,9 +1,11 @@
+. "$HOME/.local/lib/sh/print.sh"
+
 shell::is_zsh() {
-    test -n "$ZSH_VERSION"
+    test -n "${ZSH_VERSION}"
 }
 
 shell::is_bash() {
-    test -n "$BASH_VERSION"
+    test -n "${BASH_VERSION}"
 }
 
 export callee
@@ -25,6 +27,16 @@ shell::as_array() {
         echo "${name}"
     elif shell::is_bash; then
         echo "${name}[@]"
+    fi
+}
+
+shell::from_array() {
+    local param="${1}"
+
+    if shell::is_bash; then
+        echo "echo \${!${param}}"
+    elif shell::is_zsh; then
+        echo "echo \${(P)\${${param}}[@]}"
     fi
 }
 
@@ -50,12 +62,7 @@ shell::source() {
 }
 
 shell::exec_env() {
-    local env
-    if shell::is_bash; then
-        env=( "${!1}" )
-    elif shell::is_zsh; then
-        env=( "${(P)${1}[@]}" )
-    fi; shift
+    local env; env=( $(eval $(shell::from_array 1)) ); shift
     local cmd="${1}"; shift
     local args="${*}"
 
@@ -73,4 +80,8 @@ shell::exec() {
     local nil_env; nil_env=( )
     shell::exec_env $(shell::as_array nil_env) ${cmd} ${args}
     return ${?}
+}
+
+shell::args_parse() {
+    local short="${1}"
 }

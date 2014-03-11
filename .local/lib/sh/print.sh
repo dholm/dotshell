@@ -42,7 +42,7 @@ print::warning() {
 $(print::pen_color fg yellow)\
 $(eval ${caller}):\
 ${*}\
-${print::pen_format normal}"
+${print::pen_format normal}" 1>&2
 }
 
 print::info() {
@@ -50,7 +50,7 @@ print::info() {
 $(print::pen_color fg green)\
 $(eval ${caller}):\
 ${*}\
-$(print::pen_format normal)"
+$(print::pen_format normal)" 1>&2
 }
 
 print::debug() {
@@ -59,6 +59,6 @@ print::debug() {
 $(print::pen_color fg grey)\
 $(eval ${caller}):\
 ${*}\
-$(print::pen_format normal)"
+$(print::pen_format normal)" 1>&2
     fi
 }
