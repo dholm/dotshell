@@ -1,8 +1,8 @@
 [submodule ".bash.d/bash_it"]
 	path = .bash.d/bash_it
-	url = git://github.com/revans/bash-it.git
+	url = https://github.com/revans/bash-it.git
 	branch = master
 [submodule ".zsh.d/bundle/antigen"]
 	path = .zsh.d/bundle/antigen
-	url = git://github.com/zsh-users/antigen.git
+	url = https://github.com/zsh-users/antigen.git
 	branch = master
