@@ -1,5 +1,5 @@
-typeset _url_pattern='^(([a-z]{3,5})://)?((([^:\/]+)(:([^@\/]*))?@)?([^:\/?]+)(:([0-9]+))?)(\/[^?]*)?(\?[^#]*)?(#.*)?$'
-typeset _url_protocol=2
+typeset _url_pattern='^(([a-z]+)://)?((([^:\/]+)(:([^@\/]*))?@)?([^:\/?]+)(:([0-9]+))?)(\/[^?]*)?(\?[^#]*)?(#.*)?$'
+typeset _url_scheme=2
 typeset _url_address=3
 typeset _url_user=5
 typeset _url_password=7
@@ -37,9 +37,9 @@ url::is_valid() {
     _url::parse ${url}
 }
 
-url::get_protocol() {
+url::get_scheme() {
     local url="${1}"
-    _url::get_component ${url} ${_url_protocol}
+    _url::get_component ${url} ${_url_scheme}
 }
 
 url::get_user() {
