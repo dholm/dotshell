@@ -9,6 +9,7 @@
 . "$HOME/.local/lib/sh/editor.sh"
 . "$HOME/.local/lib/sh/url.sh"
 . "$HOME/.local/lib/sh/connect.sh"
+. "$HOME/.local/lib/sh/git.sh"
 
 shellrc::path_setup() {
     path::prepend /usr/local/bin
