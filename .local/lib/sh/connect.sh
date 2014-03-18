@@ -56,6 +56,12 @@ connect::ssl::to() {
     fi
 
     local openssl_args="s_client -connect ${host}:${port} -crlf -quiet"
+    local scheme; scheme=( $(string::split '+' $(url::get_scheme ${url})) )
+    if [[ "${scheme[1]}" = "tls" ]]; then
+        print::info " * TLS protocol: ${scheme[2]}"
+        openssl_args="${openssl_args} -starttls ${scheme[2]}"
+    fi
+
     shell::exec $(path::to openssl) ${openssl_args}
 }
 
@@ -96,6 +102,7 @@ connect::to() {
             ssh) connect::ssh::to ${url} ${args};;
             ssl) connect::ssl::to ${url} ${args};;
             telnet) connect::telnet::to ${url} ${args};;
+            tls*) connect::ssl::to ${url} ${args};;
             *) print::error "Unsupported scheme: ${scheme}!";;
         esac
     fi
