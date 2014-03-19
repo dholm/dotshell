@@ -155,7 +155,7 @@ path::has_binary ssh && shell::source "$HOME/.ssh/sh"
 # Load less utilities
 if path::has_binary less; then
     shell::source "$HOME/.local/lib/sh/less.sh"
-    export PAGER=$(path::to less)
+    less::setup
 fi
 
 shellrc::local_setup() {

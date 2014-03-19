@@ -13,3 +13,16 @@ less::src() {
 
     shell::exec_env $(shell::as_array lessenv) $(path::to less) ${args}
 }
+
+less::setup() {
+    # Display ANSI color codes by default.
+    LESS="-R"
+    # Use verbose pager.
+    LESS="${LESS}M"
+
+    # Commit options.
+    export LESS
+
+    # Use less as default pager.
+    export PAGER=$(path::to less)
+}
