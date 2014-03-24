@@ -144,18 +144,21 @@ shellrc::fontconfig_setup() {
 shell::eval shellrc::fontconfig_setup
 
 shellrc::tmux_setup() {
-    path::has_binary tmuxifier && eval "$(tmuxifier init -)"
+    path::has_binary tmuxifier && shell::eval "$(tmuxifier init -)"
 }
 path::has_binary tmux && shell::eval shellrc::tmux_setup
 
 os::is_linux && . "$HOME/.local/lib/sh/linux.sh"
 
-# Load SSH module
-path::has_binary ssh && shell::source "$HOME/.ssh/sh"
+if path::has_binary ssh; then
+    shell::source "$HOME/.local/lib/sh/ssh.sh"
+    shell::eval ssh::setup
+fi
+
 # Load less utilities
 if path::has_binary less; then
     shell::source "$HOME/.local/lib/sh/less.sh"
-    less::setup
+    shell::eval less::setup
 fi
 
 shellrc::local_setup() {
