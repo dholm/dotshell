@@ -1,5 +1,31 @@
 _ssh_config_files=( "$HOME/.ssh/conf" "$HOME/.ssh/conf.local" )
 
+ssh::authorize_host() {
+    local host="${1}"
+    local key="${2:-${HOME}/.ssh/id_rsa.pub}"
+
+    if ! file::is_readable "${key}"; then
+        print::error "Unable to read key ${key}!"
+        return 1
+    fi
+
+    local retval=1
+    if path::has_binary ssh-copy-id; then
+        shell::exec ssh-copy-id -i ${key} ${host}
+        retval="${?}"
+    else
+        local ssh_remote_cmd="mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
+        shell::eval cat ${key} | ssh ${host} ${ssh_remote_cmd}
+        retval="${?}"
+    fi
+
+    if [ "${retval}" -ne 0 ]; then
+        print::error "Failed to authorize host ${host} for key ${key}!"
+    fi
+
+    return ${retval}
+}
+
 ssh::wrapper() {
     local args="${*}"
     local config_fifo="$(mktemp -u --suffix=_ssh_config)"
