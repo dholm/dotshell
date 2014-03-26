@@ -56,4 +56,5 @@ ssh::setup() {
     #if os::is_linux; then
     #    alias::add ssh ssh::wrapper
     #fi
+    echo -n
 }
