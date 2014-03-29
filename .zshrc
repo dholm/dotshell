@@ -12,7 +12,7 @@ zshrc::antigen() {
     ###
     # Setup antigen
     export ADOTDIR="$HOME/.cache/antigen"
-    shell::source "$HOME/.zsh.d/bundle/antigen/antigen.zsh"
+    $(shell::source "$HOME/.zsh.d/bundle/antigen/antigen.zsh")
 
     # Load bundles from oh-my-zsh
     antigen use oh-my-zsh
@@ -81,8 +81,8 @@ shell::eval zshrc::syntax_highlighting
 zshrc::local() {
     local local_zshrc="$HOME/.zshrc.local"
     local local_zsh_aliases="$HOME/.zsh_aliases.local"
-    shell::source "${local_zshrc}"
-    shell::source "${local_zsh_aliases}"
+    $(shell::source "${local_zshrc}")
+    $(shell::source "${local_zsh_aliases}")
 }
 shell::eval zshrc::local
 

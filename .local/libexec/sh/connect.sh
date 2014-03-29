@@ -1,6 +1,7 @@
-_connect_host_table=( )
 if shell::is_zsh; then
     typeset -A _connect_host_table
+elif shell::is_bash; then
+    declare -A _connect_host_table
 fi
 
 connect::add() {

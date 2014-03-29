@@ -54,11 +54,13 @@ shell::eval() {
 shell::source() {
     local file="${1}"
 
-    if file::is_readable "${file}"; then
-        print::debug "${file}: Begin"
-        source "${file}"
-        print::debug "${file}: End"
-    fi
+    echo eval " \
+    if file::is_readable ${file}; then \
+        print::debug \"${file}: Begin\"; \
+        source ${file}; \
+        print::debug \"${file}: End\"; \
+    fi \
+    "
 }
 
 shell::exec_env() {

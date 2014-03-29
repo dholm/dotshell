@@ -26,3 +26,4 @@ less::setup() {
     # Use less as default pager.
     export PAGER=$(path::to less)
 }
+shell::eval less::setup

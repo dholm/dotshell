@@ -25,6 +25,11 @@ editor::nano() {
     echo $(path::to nano)
 }
 
+editor() {
+    local args="${*}"
+    shell::exec ${EDITOR} ${args}
+}
+
 editor::setup() {
     if path::has_binary emacsclient; then
         EDITOR=$(editor::emacsclient)
@@ -37,9 +42,8 @@ editor::setup() {
     else
         print::error "No editor found!"
     fi
-}
 
-editor() {
-    local args="${*}"
-    shell::exec ${EDITOR} ${args}
+    export VISUAL="${EDITOR}"
+    export GIT_EDITOR="${EDITOR}"
 }
+shell::eval editor::setup

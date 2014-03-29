@@ -1,19 +1,19 @@
-. "$HOME/.local/lib/sh/print.sh"
-. "$HOME/.local/lib/sh/shell.sh"
-. "$HOME/.local/lib/sh/file.sh"
-. "$HOME/.local/lib/sh/string.sh"
-. "$HOME/.local/lib/sh/path.sh"
-. "$HOME/.local/lib/sh/os.sh"
-. "$HOME/.local/lib/sh/keyboard.sh"
-. "$HOME/.local/lib/sh/process.sh"
-. "$HOME/.local/lib/sh/service.sh"
-. "$HOME/.local/lib/sh/network.sh"
-. "$HOME/.local/lib/sh/mount.sh"
-. "$HOME/.local/lib/sh/alias.sh"
-. "$HOME/.local/lib/sh/editor.sh"
-. "$HOME/.local/lib/sh/url.sh"
-. "$HOME/.local/lib/sh/connect.sh"
-. "$HOME/.local/lib/sh/git.sh"
+_shellrc_lib="${HOME}/.local/lib/sh"
+_shellrc_libexec="${HOME}/.local/libexec/sh"
+
+. "${_shellrc_lib}/print.sh"
+. "${_shellrc_lib}/shell.sh"
+. "${_shellrc_lib}/file.sh"
+. "${_shellrc_lib}/string.sh"
+. "${_shellrc_lib}/path.sh"
+. "${_shellrc_lib}/os.sh"
+. "${_shellrc_lib}/keyboard.sh"
+. "${_shellrc_lib}/process.sh"
+. "${_shellrc_lib}/service.sh"
+. "${_shellrc_lib}/network.sh"
+. "${_shellrc_lib}/mount.sh"
+. "${_shellrc_lib}/alias.sh"
+. "${_shellrc_lib}/url.sh"
 
 shellrc::path_setup() {
     path::prepend /usr/local/bin
@@ -96,7 +96,7 @@ shellrc::perl_setup() {
 
     local perlbrew_init="${HOME}/perl5/perlbrew/etc/bashrc"
     if file::is_readable "${perlbrew_init}"; then
-        shell::source "${perlbrew_init}"
+        $(shell::source "${perlbrew_init}")
     fi
 }
 path::has_binary perl && shell::eval shellrc::perl_setup
@@ -123,26 +123,19 @@ path::has_binary python && shell::eval shellrc::python_setup
 
 shellrc::ruby_setup() {
     local rvm_script="$HOME/.rvm/scripts/rvm"
-    shell::source "${rvm_script}"
+    $(shell::source "${rvm_script}")
 }
 shell::eval shellrc::ruby_setup
 
-shellrc::editor_setup() {
-    editor::setup
-    export VISUAL="${EDITOR}"
-    export GIT_EDITOR="${EDITOR}"
-}
-shell::eval shellrc::editor_setup
-
 shellrc::alias_setup() {
     local alias_file="$HOME/.shell_aliases"
-    shell::source "${alias_file}"
+    $(shell::source "${alias_file}")
 }
 shell::eval shellrc::alias_setup
 
 shellrc::fontconfig_setup() {
     local infinality_settings="$HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh"
-    shell::source "${infinality_settings}"
+    $(shell::source "${infinality_settings}")
 }
 shell::eval shellrc::fontconfig_setup
 
@@ -151,24 +144,23 @@ shellrc::tmux_setup() {
 }
 path::has_binary tmux && shell::eval shellrc::tmux_setup
 
-os::is_linux && . "$HOME/.local/lib/sh/linux.sh"
+###
+# Setup modules.
+$(shell::source "${_shellrc_libexec}/editor.sh")
+$(shell::source "${_shellrc_libexec}/connect.sh")
+os::is_linux && $(shell::source "${_shellrc_libexec}/linux.sh")
+path::has_binary ssh && $(shell::source "${_shellrc_libexec}/ssh.sh")
+path::has_binary less && $(shell::source "${_shellrc_libexec}/less.sh")
+path::has_binary gcc && $(shell::source "${_shellrc_libexec}/gcc.sh")
+path::has_binary git && $(shell::source "${_shellrc_libexec}/git.sh")
 
-if path::has_binary ssh; then
-    shell::source "$HOME/.local/lib/sh/ssh.sh"
-    shell::eval ssh::setup
-fi
-
-# Load less utilities
-if path::has_binary less; then
-    shell::source "$HOME/.local/lib/sh/less.sh"
-    shell::eval less::setup
-fi
-
+###
+# Load local configuration.
 shellrc::local_setup() {
     local local_profile="$HOME/.shellrc.local"
     local local_aliases="$HOME/.shell_aliases.local"
-    shell::source "${local_profile}"
-    shell::source "${local_aliases}"
+    $(shell::source "${local_profile}")
+    $(shell::source "${local_aliases}")
 }
 shell::eval shellrc::local_setup
 

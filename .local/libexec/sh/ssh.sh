@@ -58,3 +58,4 @@ ssh::setup() {
     #fi
     echo -n
 }
+shell::eval ssh::setup

@@ -10,7 +10,7 @@ bashrc::bash_it() {
     export BASH_IT_THEME='bobby'
 
     # Load Bash It
-    shell::source $BASH_IT/bash_it.sh
+    $(shell::source $BASH_IT/bash_it.sh)
 
     # Load selection of bash-it plugins
     local plugins=(base battery dirs fasd git osx python ssh tmux tmuxinator)
@@ -36,7 +36,7 @@ shell::eval bashrc::history
 
 bashrc::liquidprompt() {
     LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
-    shell::source "${LIQUIDPROMPT}"
+    $(shell::source "${LIQUIDPROMPT}")
 }
 shell::eval bashrc::liquidprompt
 
@@ -44,7 +44,7 @@ shell::eval bashrc::liquidprompt
 bashrc::local() {
     local local_bashrc="$HOME/.bashrc.local"
     local local_bash_aliases="$HOME/.bash_aliases.local"
-    shell::source "${local_bashrc}"
-    shell::source "${local_bash_aliases}"
+    $(shell::source "${local_bashrc}")
+    $(shell::source "${local_bash_aliases}")
 }
 shell::eval bashrc::local
