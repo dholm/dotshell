@@ -1,1 +1,1 @@
-test -r "$HOME/.bashrc" && . "$HOME/.bashrc"
+test -r "${HOME}/.bashrc" && . "${HOME}/.bashrc"

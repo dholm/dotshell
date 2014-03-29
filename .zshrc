@@ -11,8 +11,8 @@ shell::eval zshrc::zsh_completions
 zshrc::antigen() {
     ###
     # Setup antigen
-    export ADOTDIR="$HOME/.cache/antigen"
-    $(shell::source "$HOME/.zsh.d/bundle/antigen/antigen.zsh")
+    export ADOTDIR="${HOME}/.cache/antigen"
+    $(shell::source "${HOME}/.zsh.d/bundle/antigen/antigen.zsh")
 
     # Load bundles from oh-my-zsh
     antigen use oh-my-zsh
@@ -40,7 +40,7 @@ zshrc::antigen_bundles() {
         gnu-utils
 EOB
 
-    file::is_directory "$HOME/.vim/bundle/vundle" && antigen bundle vundle
+    file::is_directory "${HOME}/.vim/bundle/vundle" && antigen bundle vundle
 
     for binary in rsync node npm fasd ssh-agent scala sbt ruby svn python pip; do
         path::has_binary "${binary}" && antigen bundle "${binary}"
@@ -78,13 +78,8 @@ zshrc::syntax_highlighting() {
 shell::eval zshrc::syntax_highlighting
 
 
-zshrc::local() {
-    local local_zshrc="$HOME/.zshrc.local"
-    local local_zsh_aliases="$HOME/.zsh_aliases.local"
-    $(shell::source "${local_zshrc}")
-    $(shell::source "${local_zsh_aliases}")
-}
-shell::eval zshrc::local
+$(shell::source "${HOME}/.zshrc.local")
+$(shell::source "${HOME}/.zsh_aliases.local")
 
 
 ###

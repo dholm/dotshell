@@ -15,6 +15,14 @@ _shellrc_libexec="${HOME}/.local/libexec/sh"
 . "${_shellrc_lib}/alias.sh"
 . "${_shellrc_lib}/url.sh"
 
+shellrc::module::load() {
+    local module="${1}"
+
+    echo eval " \
+    \$(shell::source ${_shellrc_libexec}/${module}.sh); \
+    "
+}
+
 shellrc::path_setup() {
     path::prepend /usr/local/bin
     path::prepend /usr/local/sbin
@@ -43,10 +51,10 @@ shellrc::path_setup() {
         fi
     fi
 
-    path::prepend "$HOME/.local/bin"
-    path::prepend "$HOME/.cask/bin"
-    path::prepend "$HOME/.cabal/bin"
-    path::prepend "$HOME/bin"
+    path::prepend "${HOME}/.local/bin"
+    path::prepend "${HOME}/.cask/bin"
+    path::prepend "${HOME}/.cabal/bin"
+    path::prepend "${HOME}/bin"
 }
 shell::eval shellrc::path_setup
 
@@ -68,101 +76,32 @@ shellrc::terminal_setup() {
 }
 shell::eval shellrc::terminal_setup
 
-shellrc::dircolor_setup() {
-    local dircolors_path="$HOME/.dircolors"
-
-    if file::is_readable "${dircolors_path}"; then
-        eval "$(dircolors -b ${dircolors_path})"
-    else
-        eval "$(dircolors -b)"
-    fi
-}
-path::has_binary dircolors && shell::eval shellrc::dircolor_setup
-
-shellrc::perl_setup() {
-    path::prepend "${HOME}/perl5/bin"
-
-    shellrc::perl_setup::local_lib() {
-        local arch_name="$(perl -MConfig -e'print $Config{archname}')"
-
-        export PERL_LOCAL_LIB_ROOT="${HOME}/.local"
-        export PERL_MB_OPT="--install_base ${PERL_LOCAL_LIB_ROOT}"
-        export PERL_MM_OPT="INSTALL_BASE=${PERL_LOCAL_LIB_ROOT} LIB=${PERL_LOCAL_LIB_ROOT}/lib"
-        export PERL_MM_OPT="${PERL_MM_OPT} INSTALLSITEMAN1DIR=${PERL_LOCAL_LIB_ROOT}/share/man/man1"
-        export PERL_MM_OPT="${PERL_MM_OPT} INSTALLSITEMAN3DIR=${PERL_LOCAL_LIB_ROOT}/share/man/man3"
-        export PERL5LIB="${PERL_LOCAL_LIB_ROOT}/lib/perl5/${arch_name}:${PERL_LOCAL_LIB_ROOT}/lib/perl5"
-    }
-    shellrc::perl_setup::local_lib
-
-    local perlbrew_init="${HOME}/perl5/perlbrew/etc/bashrc"
-    if file::is_readable "${perlbrew_init}"; then
-        $(shell::source "${perlbrew_init}")
-    fi
-}
-path::has_binary perl && shell::eval shellrc::perl_setup
-
-shellrc::python_setup() {
-    export VIRTUALENV_DISTRIBUTE=true
-
-    if os::is_darwin && path::has_binary brew; then
-        export PYTHONPATH="$(brew --prefix)/lib/python2.7/site-packages:${PYTHONPATH}"
-    fi
-
-    if path::has_binary pip; then
-        export PIP_REQUIRE_VIRTUALENV=true
-        export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
-        syspip() {
-            local args="${*}"
-            local pipenv; pipenv=( PIP_REQUIRE_VIRTUALENV=false )
-
-            shell::exec_env $(shell::as_array pipenv) $(path::to pip) ${args}
-        }
-    fi
-}
-path::has_binary python && shell::eval shellrc::python_setup
-
-shellrc::ruby_setup() {
-    local rvm_script="$HOME/.rvm/scripts/rvm"
-    $(shell::source "${rvm_script}")
-}
-shell::eval shellrc::ruby_setup
-
 shellrc::alias_setup() {
-    local alias_file="$HOME/.shell_aliases"
+    local alias_file="${HOME}/.shell_aliases"
     $(shell::source "${alias_file}")
 }
 shell::eval shellrc::alias_setup
 
-shellrc::fontconfig_setup() {
-    local infinality_settings="$HOME/.dotfiles/external/fontconfig-ultimate/freetype/infinality-settings.sh"
-    $(shell::source "${infinality_settings}")
-}
-shell::eval shellrc::fontconfig_setup
-
-shellrc::tmux_setup() {
-    path::has_binary tmuxifier && shell::eval "$(tmuxifier init -)"
-}
-path::has_binary tmux && shell::eval shellrc::tmux_setup
-
 ###
 # Setup modules.
-$(shell::source "${_shellrc_libexec}/editor.sh")
-$(shell::source "${_shellrc_libexec}/connect.sh")
-os::is_linux && $(shell::source "${_shellrc_libexec}/linux.sh")
-path::has_binary ssh && $(shell::source "${_shellrc_libexec}/ssh.sh")
-path::has_binary less && $(shell::source "${_shellrc_libexec}/less.sh")
-path::has_binary gcc && $(shell::source "${_shellrc_libexec}/gcc.sh")
-path::has_binary git && $(shell::source "${_shellrc_libexec}/git.sh")
+$(shellrc::module::load editor)
+$(shellrc::module::load connect)
+os::is_linux && $(shellrc::module::load linux)
+path::has_binary dircolors && $(shellrc::module::load dircolors)
+path::has_binary fc-list && $(shellrc::module::load fontconfig)
+path::has_binary ssh && $(shellrc::module::load ssh)
+path::has_binary less && $(shellrc::module::load less)
+path::has_binary gcc && $(shellrc::module::load gcc)
+path::has_binary git && $(shellrc::module::load git)
+path::has_binary tmux && $(shellrc::module::load tmux)
+path::has_binary python && $(shellrc::module::load python)
+path::has_binary ruby && $(shellrc::module::load ruby)
+path::has_binary perl && $(shellrc::module::load perl)
 
 ###
 # Load local configuration.
-shellrc::local_setup() {
-    local local_profile="$HOME/.shellrc.local"
-    local local_aliases="$HOME/.shell_aliases.local"
-    $(shell::source "${local_profile}")
-    $(shell::source "${local_aliases}")
-}
-shell::eval shellrc::local_setup
+$(shell::source "${HOME}/.shellrc.local")
+$(shell::source "${HOME}/.shell_aliases.local")
 
 # Local Variables:
 # mode: shell-script

@@ -3,7 +3,7 @@
 
 bashrc::bash_it() {
     # Path to the bash it configuration
-    export BASH_IT=$HOME/.bash.d/bash_it
+    export BASH_IT="${HOME}/.bash.d/bash_it"
 
     # Lock and Load a custom theme file
     # location /.bash_it/themes/
@@ -35,16 +35,11 @@ shell::eval bashrc::history
 
 
 bashrc::liquidprompt() {
-    LIQUIDPROMPT=$HOME/.dotfiles/external/liquidprompt/liquidprompt
-    $(shell::source "${LIQUIDPROMPT}")
+    local liquidprompt="${HOME}/.dotfiles/external/liquidprompt/liquidprompt"
+    $(shell::source "${liquidprompt}")
 }
 shell::eval bashrc::liquidprompt
 
 
-bashrc::local() {
-    local local_bashrc="$HOME/.bashrc.local"
-    local local_bash_aliases="$HOME/.bash_aliases.local"
-    $(shell::source "${local_bashrc}")
-    $(shell::source "${local_bash_aliases}")
-}
-shell::eval bashrc::local
+$(shell::source "${HOME}/.bashrc.local")
+$(shell::source "${HOME}/.bash_aliases.local")
