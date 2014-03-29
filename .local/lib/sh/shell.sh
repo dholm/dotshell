@@ -12,13 +12,13 @@ export callee
 export caller
 export this
 if shell::is_zsh; then
-    callee='echo ${0}'
-    caller='echo ${funcstack[1]}'
-    this='echo ${0}'
+    callee='echo ${funcstack[2]}'
+    caller='echo ${funcstack[3]}'
+    this='echo ${0:-${_}}'
 elif shell::is_bash; then
     callee='echo ${FUNCNAME[0]}'
     caller='echo ${FUNCNAME[1]}'
-    this='echo ${BASH_SOURCE}'
+    this='echo ${BASH_SOURCE[0]:-${_}}'
 fi
 
 shell::as_array() {
