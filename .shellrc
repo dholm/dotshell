@@ -5,6 +5,7 @@
 . "$HOME/.local/lib/sh/path.sh"
 . "$HOME/.local/lib/sh/os.sh"
 . "$HOME/.local/lib/sh/keyboard.sh"
+. "$HOME/.local/lib/sh/service.sh"
 . "$HOME/.local/lib/sh/mount.sh"
 . "$HOME/.local/lib/sh/alias.sh"
 . "$HOME/.local/lib/sh/editor.sh"
