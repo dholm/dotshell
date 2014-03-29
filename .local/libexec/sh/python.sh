@@ -1,6 +1,6 @@
 python::syspip() {
     local args="${*}"
-    local pipenv=( PIP_REQUIRE_VIRTUALENV=false )
+    local pipenv; pipenv=( PIP_REQUIRE_VIRTUALENV=false )
 
     shell::exec_env $(shell::as_array pipenv) $(path::to pip) ${args}
 }
