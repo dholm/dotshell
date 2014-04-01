@@ -3,7 +3,7 @@ process::hangup() {
  -p --privileged  - Send hangup as privileged user.
  -h --help        - Print help.
 "
-    eval $(shell::args_parse "hp" "help,privileged" "${@}")
+    eval $(shell::args_parse "hp" "help,privileged")
 
     local opts; typeset -A opts
     opts[privileged]=false

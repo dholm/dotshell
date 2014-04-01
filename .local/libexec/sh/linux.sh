@@ -3,7 +3,7 @@ debian::dpkg::build() {
  -c --clean  - Clean before build.
  -h --help   - Print help.
 "
-    eval $(shell::args_parse "ch" "clean,help" "${@}")
+    eval $(shell::args_parse "ch" "clean,help")
 
     local opts; typeset -A opts
     opts[clean]=false

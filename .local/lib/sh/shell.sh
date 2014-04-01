@@ -88,19 +88,12 @@ shell::args_parse() {
     local short="${1}"; shift
     local long="${1}"; shift
 
-    print::debug "short=${short} long=${long} args={${@}}"
+    print::debug "short=${short} long=${long}"
     local cmd="getopt"
     if os::is_darwin; then
         cmd="$(brew --prefix gnu-getopt)/bin/getopt"
     fi
 
-    local get_opts="${cmd} -o ${short} --long ${long}"
-    get_opts=$(shell::eval ${get_opts} -- "${@}")
-    if ((${?} != 0)); then
-        return 1
-    fi
-
-    print::debug "args={ ${get_opts} }"
-    echo "set -- ${get_opts}"
-    return ${?}
+    local get_opts="${cmd} -o ${short} --long ${long} -n $(eval ${caller})"
+    echo "eval set -- \$(${get_opts} -- \"\${@}\")"
 }
