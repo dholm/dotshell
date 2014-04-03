@@ -3,6 +3,8 @@ _shellrc_libexec="${HOME}/.local/libexec/sh"
 
 . "${_shellrc_lib}/print.sh"
 . "${_shellrc_lib}/shell.sh"
+. "${_shellrc_lib}/compat.sh"
+. "${_shellrc_lib}/alist.sh"
 . "${_shellrc_lib}/file.sh"
 . "${_shellrc_lib}/string.sh"
 . "${_shellrc_lib}/path.sh"

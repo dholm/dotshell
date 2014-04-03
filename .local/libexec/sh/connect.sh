@@ -1,8 +1,4 @@
-if shell::is_zsh; then
-    typeset -A _connect_host_table
-elif shell::is_bash; then
-    declare -A _connect_host_table
-fi
+eval $(alist::typeset _connect_host_table)
 
 connect::add() {
     local name="${1}"
@@ -10,7 +6,7 @@ connect::add() {
 
     if url::is_valid ${url}; then
         print::debug "Adding ${name} (${url}) to host table"
-        _connect_host_table[${name}]=${url}
+        eval $(alist::add _connect_host_table ${name} ${url})
         return 0
     else
         print::error "Url ${url} failed validation!"
@@ -98,7 +94,7 @@ connect::to() {
     local system="${1}"; shift
     local args="${*}"
 
-    local url="${_connect_host_table[${system}]}"
+    local url="$(eval $(alist::get _connect_host_table ${system}))"
     if [[ -n "${url}" ]]; then
         print::info "Connecting to ${url}.."
         local scheme="$(url::get_scheme ${url})"
