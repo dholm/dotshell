@@ -1,5 +1,5 @@
 compat::version() {
-    echo "$@" | gawk -F. '{ printf("%d.%d.%d\n", $1,$2,$3); }'
+    echo "$@" | awk -F. '{ printf("%d.%d.%d\n", $1,$2,$3); }'
 }
 
 compat::shell::has_associative_arrays() {
