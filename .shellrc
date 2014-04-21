@@ -99,6 +99,7 @@ path::has_binary tmux && $(shellrc::module::load tmux)
 path::has_binary python && $(shellrc::module::load python)
 path::has_binary ruby && $(shellrc::module::load ruby)
 path::has_binary perl && $(shellrc::module::load perl)
+path::has_binary R && $(shellrc::module::load R)
 
 ###
 # Load local configuration.
