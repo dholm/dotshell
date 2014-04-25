@@ -88,12 +88,12 @@ shell::eval shellrc::alias_setup
 # Setup modules.
 $(shellrc::module::load editor)
 $(shellrc::module::load connect)
+$(shellrc::module::load compiler)
 os::is_linux && $(shellrc::module::load linux)
 path::has_binary dircolors && $(shellrc::module::load dircolors)
 path::has_binary fc-list && $(shellrc::module::load fontconfig)
 path::has_binary ssh && $(shellrc::module::load ssh)
 path::has_binary less && $(shellrc::module::load less)
-path::has_binary gcc && $(shellrc::module::load gcc)
 path::has_binary git && $(shellrc::module::load git)
 path::has_binary tmux && $(shellrc::module::load tmux)
 path::has_binary python && $(shellrc::module::load python)
