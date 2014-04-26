@@ -13,8 +13,10 @@ bashrc::bash_it() {
     $(shell::source $BASH_IT/bash_it.sh)
 
     # Load selection of bash-it plugins
-    local plugins=(base battery dirs fasd git osx python ssh tmux tmuxinator)
-    local plugins_enabled="$(bash-it show plugins | egrep \\[x)"
+    local plugins; plugins=(
+        base battery dirs fasd git osx python ssh tmux tmuxinator
+    )
+    local plugins_enabled="$(bash-it show plugins | egrep '\[x')"
     for plugin in ${plugins[@]}; do
         if ( ! $(echo $plugins_enabled | grep -q $plugin) ); then
             shell::eval bash-it enable plugin $plugin
@@ -28,7 +30,7 @@ bashrc::history() {
     # Don't put duplicate lines or lines starting with space in the history.
     HISTCONTROL=ignoreboth
 
-    # append to the history file, don't overwrite it
+    # Append to the history file, don't overwrite it.
     shopt -s histappend
 }
 shell::eval bashrc::history
