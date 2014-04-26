@@ -3,6 +3,7 @@ _shellrc_libexec="${HOME}/.local/libexec/sh"
 
 . "${_shellrc_lib}/print.sh"
 . "${_shellrc_lib}/shell.sh"
+. "${_shellrc_lib}/fn.sh"
 . "${_shellrc_lib}/compat.sh"
 . "${_shellrc_lib}/alist.sh"
 . "${_shellrc_lib}/file.sh"
@@ -31,27 +32,6 @@ shellrc::path_setup() {
 
     path::has_binary npm && path::prepend "$(npm prefix --global)/bin"
     path::prepend "/opt/cabal/bin"
-
-    if os::is_darwin; then
-        path::prepend /usr/texbin
-        path::prepend /opt/X11/bin
-
-        local server_prefix="/Applications/Server.app/Contents/ServerRoot"
-        path::prepend "$server_prefix/bin"
-        path::prepend "$server_prefix/sbin"
-
-        if path::has_binary brew; then
-            local brew_prefix="$(brew --prefix)"
-            path::prepend "$brew_prefix/bin"
-            path::prepend "$brew_prefix/sbin"
-
-            for binary in ruby python python3 go; do
-                if file::is_executable "${brew_prefix}/bin/${binary}"; then
-                    path::prepend "$(brew --prefix ${binary})/bin"
-                fi
-            done
-        fi
-    fi
 
     path::prepend "${HOME}/.local/bin"
     path::prepend "${HOME}/.cask/bin"
@@ -86,10 +66,17 @@ shell::eval shellrc::alias_setup
 
 ###
 # Setup modules.
+if os::is_linux; then
+    $(shellrc::module::load linux)
+elif os::is_darwin; then
+    $(shellrc::module::load darwin)
+    path::has_binary brew && $(shellrc::module::load homebrew)
+fi
+
 $(shellrc::module::load editor)
 $(shellrc::module::load connect)
 $(shellrc::module::load compiler)
-os::is_linux && $(shellrc::module::load linux)
+
 path::has_binary dircolors && $(shellrc::module::load dircolors)
 path::has_binary fc-list && $(shellrc::module::load fontconfig)
 path::has_binary ssh && $(shellrc::module::load ssh)
