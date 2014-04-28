@@ -56,10 +56,14 @@ python::_setup_pip() {
     export PIP_REQUIRE_VIRTUALENV=true
     export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
 
-    alias::add syspip2 "python::exec_pip_version 2"
-    alias::add syspip3 "python::exec_pip_version 3"
+    path::has_binary pip2 && alias::add syspip2 "python::exec_pip_version 2"
+    path::has_binary pip3 && alias::add syspip3 "python::exec_pip_version 3"
 
-    alias::add syspip syspip2
+    if path::has_binary pip2; then
+        alias::add syspip syspip2
+    elif path::has_binary pip3; then
+        alias::add syspip syspip3
+    fi
 }
 
 python::setup() {
@@ -71,10 +75,13 @@ python::setup() {
     os::is_darwin && python::_setup_darwin
     path::has_binary pip && python::_setup_pip
 
-    alias::add python2 "python::exec_python_version 2"
-    alias::add python3 "python::exec_python_version 3"
+    path::has_binary python2 && alias::add python2 "python::exec_python_version 2"
+    path::has_binary python3 && alias::add python3 "python::exec_python_version 3"
 
-    # Make Python 2 the default.
-    alias::add python python2
+    if path::has_binary python2; then
+        alias::add python python2
+    elif path::has_binary python3; then
+        alias::add python python3
+    fi
 }
 shell::eval python::setup
