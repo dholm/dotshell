@@ -41,7 +41,7 @@ shellrc::path_setup() {
 shell::eval shellrc::path_setup
 
 shellrc::coding_setup() {
-    export LANG="en_US.UTF_8"
+    export LANG="en_US.UTF-8"
     export LC_ALL="en_US.UTF-8"
     # Keep the default sort order (e.g. files starting with a '.'
     # should appear at the start of a directory listing.)
