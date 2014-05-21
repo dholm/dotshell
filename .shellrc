@@ -41,13 +41,44 @@ shellrc::path_setup() {
 shell::eval shellrc::path_setup
 
 shellrc::coding_setup() {
-    export LANG="en_US.UTF-8"
-    export LC_ALL="en_US.UTF-8"
-    # Keep the default sort order (e.g. files starting with a '.'
-    # should appear at the start of a directory listing.)
+    local locale="en_US.UTF-8"
+    local measurement="en_DK.UTF-8"
+
+    ###
+    # Standard settings.
+    # Default locale.
+    export LANG="${locale}"
+    # Character handling rules.
+    export LC_CTYPE="${locale}"
+    # Messages and menus.
+    export LC_MESSAGES="${locale}"
+    # Monetary formatting.
+    export LC_MONETARY="${locale}"
+    # Non-monetary numeric formatting.
+    export LC_NUMERIC="${locale}"
+    # Keep the default sort order (e.g. files starting with a '.' should appear
+    # at the start of a directory listing.)
     export LC_COLLATE="C"
-    # Set the short date to YYYY-MM-DD (test with "date +%c")
-    export LC_TIME="sv_SE.UTF-8"
+    # Set the short date to ISO 8601 (YYYY-MM-DD, test with "date +%c") but use
+    # English names.
+    export LC_TIME="${measurement}"
+
+    ###
+    # GNU extensions.
+    # Units of measurement.
+    export LC_MEASUREMENT="${measurement}"
+    # Telephone numbers.
+    export LC_TELEPHONE="${measurement}"
+    # Address formatting.
+    export LC_ADDRESS="${measurement}"
+    # Paper size.
+    export LC_PAPER="${measurement}"
+    # Person name formatting.
+    export LC_NAME="${locale}"
+
+    ###
+    # Prevent global overrides.
+    export LC_ALL=""
 }
 shell::eval shellrc::coding_setup
 
