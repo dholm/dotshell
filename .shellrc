@@ -4,6 +4,7 @@ _shellrc_libexec="${HOME}/.local/libexec/sh"
 . "${_shellrc_lib}/print.sh"
 . "${_shellrc_lib}/shell.sh"
 . "${_shellrc_lib}/fn.sh"
+. "${_shellrc_lib}/array.sh"
 . "${_shellrc_lib}/compat.sh"
 . "${_shellrc_lib}/alist.sh"
 . "${_shellrc_lib}/file.sh"
@@ -41,8 +42,11 @@ shellrc::path_setup() {
 shell::eval shellrc::path_setup
 
 shellrc::coding_setup() {
-    local locale="en_US.UTF-8"
-    local measurement="en_DK.UTF-8"
+    local locale; locale="en_US.UTF-8"
+    local measurement; measurement=( en_DK.UTF-8 en_IE.UTF-8 ${locale} C )
+
+    local locales; locales=( $(shell::exec locale -a) )
+    measurement=( $(fn::filter 'array::find $(shell::as_array locales) $1 >/dev/null' ${measurement[@]}) )
 
     ###
     # Standard settings.
@@ -61,18 +65,18 @@ shellrc::coding_setup() {
     export LC_COLLATE="C"
     # Set the short date to ISO 8601 (YYYY-MM-DD, test with "date +%c") but use
     # English names.
-    export LC_TIME="${measurement}"
+    export LC_TIME="${measurement[1]}"
 
     ###
     # GNU extensions.
     # Units of measurement.
-    export LC_MEASUREMENT="${measurement}"
+    export LC_MEASUREMENT="${measurement[1]}"
     # Telephone numbers.
-    export LC_TELEPHONE="${measurement}"
+    export LC_TELEPHONE="${measurement[1]}"
     # Address formatting.
-    export LC_ADDRESS="${measurement}"
+    export LC_ADDRESS="${measurement[1]}"
     # Paper size.
-    export LC_PAPER="${measurement}"
+    export LC_PAPER="${measurement[1]}"
     # Person name formatting.
     export LC_NAME="${locale}"
 
