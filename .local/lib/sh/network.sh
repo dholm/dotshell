@@ -1,4 +1,4 @@
-network::ip::_public() {
+_network::ip::public() {
     local url="${1}"
 
     if path::has_binary curl; then
@@ -6,7 +6,7 @@ network::ip::_public() {
     elif path::has_binary wget; then
         shell::exec wget --quiet --output-document - "${url}"
     else
-        return -1
+        return 1
     fi
 }
 
@@ -30,7 +30,7 @@ network::ip::public() {
         shift
     done
 
-    network::ip::_public "${host}"
+    _network::ip::public "${host}"
 }
 
 network::dns::flush() {
@@ -48,4 +48,23 @@ network::dns::flush() {
             service::restart bind
         fi
     fi
+}
+
+network::dns::resolve::ns() {
+    local host="${1}"
+
+    local dig_args="+short NS"
+    shell::exec dig ${dig_args} ${host}
+}
+
+network::dns::resolve() {
+    local host="${1}"
+
+    local ns; ns=( $(network::dns::resolve::ns ${host}) )
+    if [ ${#ns[@]} -eq 0 ]; then
+        return 1
+    fi
+
+    local dig_args="+short @${ns[1]}"
+    shell::exec dig ${dig_args} ${host}
 }
