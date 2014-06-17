@@ -8,6 +8,12 @@ zshrc::zsh_completions() {
 shell::eval zshrc::zsh_completions
 
 
+zshrc::history() {
+    alias zhistory="builtin history -di 1"
+}
+shell::eval zshrc::history
+
+
 zshrc::antigen() {
     ###
     # Setup antigen
