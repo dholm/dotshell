@@ -83,5 +83,10 @@ python::setup() {
     elif path::has_binary python3; then
         alias::add python python3
     fi
+
+    local pystartup="${HOME}/.pystartup"
+    if file::is_readable "${pystartup}"; then
+        export PYTHONSTARTUP="${pystartup}"
+    fi
 }
 shell::eval python::setup
