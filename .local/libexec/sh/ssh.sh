@@ -27,17 +27,45 @@ ssh::authorize_host() {
 }
 
 ssh::wrapper() {
+    local usage="Usage:
+ -p --password  - Force password login.
+ -h --help      - Print help.
+"
+    eval $(shell::args_parse "ph" "password,help")
+
+    local opts; typeset -A opts
+    opts[password]=false
+    while true; do
+        case "${1}" in
+            -p|--password) opts[password]=true;;
+            -h|--help) print::info ${usage}; return 0;;
+            --) shift; break;;
+            *) print::error "Unknown option: ${1}"; return 1;;
+        esac
+        shift
+    done
     local args="${*}"
-    local config_fifo="$(mktemp -u --suffix=_ssh_config)"
 
-    print::debug "Setting up configuration FIFO ${config_fifo}.."
-    mkfifo "${config_fifo}"
-    chmod 600 "${config_fifo}"
-    set +m
-    cat ${_ssh_config_files[@]} >"${config_fifo}" 2>/dev/null &
+    local config_pipe=""
+    local ssh_args=""
+    if false; then
+        # Currently broken on Ubuntu and Darwin.
+        print::debug "Setting up configuration FIFO ${config_fifo}.."
+        local config_fifo="$(mktemp -u --suffix=_ssh_config)"
+        mkfifo "${config_fifo}"
+        chmod 600 "${config_fifo}"
+        set +m
+        cat ${_ssh_config_files[@]} >"${config_fifo}" 2>/dev/null &
+        ssh_args="${ssh_args} -F ${config_fifo}"
+        config_pipe="-F <(cat ${_ssh_config_files[*]} 2>/dev/null)"
+    fi
 
-    local ssh_args="-F ${config_fifo} ${args}"
-    shell::exec ssh ${ssh_args}
+    if ${opts[password]}; then
+        ssh_args="${ssh_args} -o PubkeyAuthentication=no"
+    fi
+
+    ssh_args="${ssh_args} ${args}"
+    shell::exec ssh ${ssh_args} ${config_pipe}
 
     rm -f "${config_fifo}"
 }
@@ -51,11 +79,6 @@ ssh::nohostkey() {
 }
 
 ssh::setup() {
-    # Currently broken on Ubuntu and OSX
-    #alias::add ssh "ssh -F <(cat ${_ssh_config_files[*]} 2>/dev/null)"
-    #if os::is_linux; then
-    #    alias::add ssh ssh::wrapper
-    #fi
-    echo -n
+    alias::add ssh ssh::wrapper
 }
 shell::eval ssh::setup
