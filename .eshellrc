@@ -1,0 +1,8 @@
+# Set a nice 256-color terminal.
+(eshell/export "TERM=xterm-256color")
+
+# Emacs has all the paging we will ever need.
+(eshell/export "PAGER=")
+
+# Use Emacs for editing files.
+(eshell/export "EDITOR=emacsclient")
