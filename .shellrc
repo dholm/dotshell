@@ -123,6 +123,8 @@ path::has_binary ruby && $(shellrc::module::load ruby)
 path::has_binary perl && $(shellrc::module::load perl)
 path::has_binary ocaml && $(shellrc::module::load ocaml)
 path::has_binary R && $(shellrc::module::load R)
+path::has_binary go && $(shellrc::module::load go)
+
 
 ###
 # Load local configuration.
