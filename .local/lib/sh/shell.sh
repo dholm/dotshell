@@ -21,6 +21,17 @@ elif shell::is_bash; then
     this='echo ${BASH_SOURCE[0]:-${_}}'
 fi
 
+shell::has_function() {
+    local name="${1}"
+    if shell::is_zsh; then
+        local t="$(type ${name})"
+        echo ${t} | grep -q function
+    elif shell::is_bash; then
+        local t="$(shell::eval type -t ${name})"
+        [[ "${t}" == "function" ]]
+    fi
+}
+
 shell::as_array() {
     local name="${1}"
     if shell::is_zsh; then

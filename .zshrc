@@ -73,7 +73,7 @@ shell::eval zshrc::antigen_bundles
 
 
 zshrc::liquidprompt() {
-    antigen bundle nojhan/liquidprompt
+    [[ "${TERM}" != "dumb" ]] && antigen bundle nojhan/liquidprompt
 }
 shell::eval zshrc::liquidprompt
 
@@ -82,6 +82,19 @@ zshrc::syntax_highlighting() {
     antigen bundle zsh-users/zsh-syntax-highlighting
 }
 shell::eval zshrc::syntax_highlighting
+
+
+zshrc::dumb_terminal() {
+    # Fallback for dumb terminals (i.e. when running under Emacs Tramp).
+    print::debug "Dumb terminal detected, falling back to safe mode."
+    unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    shell::has_function precmd && unfunction precmd
+    shell::has_function preexec && unfunction preexec
+    PS1='$ '
+}
+[[ "${TERM}" == "dumb" ]] && zshrc::dumb_terminal
 
 
 $(shell::source "${HOME}/.zshrc.local")
