@@ -1,3 +1,9 @@
+if [[ $- != *i* ]]; then
+    # Shell is non-interactive, skip everything from this point.
+    return
+fi
+
+
 . "${HOME}/.shellrc"
 
 

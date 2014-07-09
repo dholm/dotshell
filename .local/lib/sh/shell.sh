@@ -21,6 +21,10 @@ elif shell::is_bash; then
     this='echo ${BASH_SOURCE[0]:-${_}}'
 fi
 
+shell::is_non_interactive() {
+    [[ $- != *i* ]]
+}
+
 shell::has_function() {
     local name="${1}"
     if shell::is_zsh; then
