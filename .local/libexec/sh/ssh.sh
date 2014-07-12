@@ -29,15 +29,18 @@ ssh::authorize_host() {
 ssh::wrapper() {
     local usage="Usage:
  -p --password  - Force password login.
+ -X --x11       - Forward X11 protocol.
  -h --help      - Print help.
 "
-    eval $(shell::args_parse "ph" "password,help")
+    eval $(shell::args_parse "pXh" "password,x11,help")
 
     local opts; typeset -A opts
     opts[password]=false
+    opts[x11]=false
     while true; do
         case "${1}" in
             -p|--password) opts[password]=true;;
+            -X|--x11) opts[x11]=true;;
             -h|--help) print::info ${usage}; return 0;;
             --) shift; break;;
             *) print::error "Unknown option: ${1}"; return 1;;
@@ -62,6 +65,9 @@ ssh::wrapper() {
 
     if ${opts[password]}; then
         ssh_args="${ssh_args} -o PubkeyAuthentication=no"
+    fi
+    if ${opts[x11]}; then
+        ssh_args="${ssh_args} -X -Y"
     fi
 
     ssh_args="${ssh_args} ${args}"
