@@ -82,10 +82,10 @@ python::setup() {
     if path::has_binary python2; then
         # Add Python's bin directory to the path, in case it isn't installed in
         # one of the global paths, as pip will install binaries there.
-        path::prepend $(dirname $(readlink -e $(path::to python2)))
+        path::prepend $(dirname $(file::abs $(path::to python2)))
         alias::add python python2
     elif path::has_binary python3; then
-        path::prepend $(dirname $(readlink -e $(path::to python3)))
+        path::prepend $(dirname $(file::abs $(path::to python3)))
         alias::add python python3
     fi
 
