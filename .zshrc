@@ -3,7 +3,6 @@ if [[ $- != *i* ]]; then
     return
 fi
 
-
 . "${HOME}/.shellrc"
 
 
@@ -110,3 +109,8 @@ $(shell::source "${HOME}/.zsh_aliases.local")
 ###
 # Apply antigen
 antigen apply
+
+
+if ((PROFILE)); then
+    profile::stop
+fi

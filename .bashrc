@@ -51,3 +51,8 @@ shell::eval bashrc::liquidprompt
 
 $(shell::source "${HOME}/.bashrc.local")
 $(shell::source "${HOME}/.bash_aliases.local")
+
+
+if ((PROFILE)); then
+    profile::stop
+fi
