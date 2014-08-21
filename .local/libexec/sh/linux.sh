@@ -3,14 +3,16 @@ debian::dpkg::build() {
  -c --clean             - Clean before build.
  -j <n> --parallel=<n>  - Parallelize build over n threads.
  -t --test              - Run tests.
+ --no-deps              - Skip build dependency check.
  --no-docs              - Don't build documentation.
  --arch=<target>        - Cross-compile package for <target>.
  -h --help              - Print help.
 "
-    eval $(shell::args_parse "cj:th" "arch:,clean,no-docs,parallel:,test,help")
+    eval $(shell::args_parse "cj:th" "arch:,clean,no-deps,no-docs,parallel:,test,help")
 
     local opts; typeset -A opts
     opts[clean]=false
+    opts[deps]=true
     opts[docs]=true
     opts[parallel]=1
     opts[test]=false
@@ -20,6 +22,7 @@ debian::dpkg::build() {
             --arch) shift; opts[arch]="${1}";;
             -c|--clean) opts[clean]=true;;
             -j|--parallel) shift; opts[parallel]="${1}";;
+            --no-deps) opts[deps]=false;;
             --no-docs) opts[docs]=false;;
             -t|--test) opts[test]=true;;
             -h|--help) print::info ${usage}; return 0;;
@@ -35,27 +38,32 @@ debian::dpkg::build() {
         build_args="${build_args} -nc"
     fi
 
+    if ! ${opts[deps]}; then
+        print::debug "Skipping dependency check."
+        build_args="${build_args} -d"
+    fi
+
     local build_opts=""
-    if ((1 < "${opts[parallel]}")); then
+    if [[ 1 -lt "${opts[parallel]}" ]]; then
         print::debug "Parallelizing over ${opts[parallel]} threads."
-        build_opts="${build_opts} parallel=${opts[parallel]}"
+        build_opts="parallel=${opts[parallel]} ${build_opts}"
     fi
 
     if ! ${opts[test]}; then
         print::debug "Avoiding tests when possible."
-        build_opts="${build_opts} nocheck"
+        build_opts="nocheck ${build_opts}"
     fi
 
     if ! ${opts[docs]}; then
         print::debug "Not building documentation."
-        build_opts="${build_opts} nodocs"
+        build_opts="nodocs ${build_opts}"
     fi
 
     local build_cmd="$(path::to dpkg-buildpackage)"
     if [[ "$(uname -m)" != "${opts[arch]}" ]]; then
         print::debug "Cross compiling for ${opts[arch]}."
         build_cmd="$(path::to debuild)"
-        build_args="-a${opts[arch]}"
+        build_args="${build_args} -a${opts[arch]}"
     fi
 
     local build_env; build_env=( DEB_BUILD_OPTIONS="${build_opts}" )
