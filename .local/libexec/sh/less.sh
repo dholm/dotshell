@@ -14,10 +14,12 @@ less::src() {
 }
 
 less::setup() {
-    # Display ANSI color codes by default.
+    # Display ANSI color codes.
     LESS="-R"
     # Use verbose pager.
     LESS="${LESS}M"
+    # Ignore case in searches.
+    LESS="${LESS}i"
 
     # Commit options.
     export LESS
