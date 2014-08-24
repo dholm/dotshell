@@ -79,6 +79,9 @@ shell::source() {
     "
 }
 
+shell::pushd() { pushd "${1}" >/dev/null }
+shell::popd() { popd >/dev/null }
+
 shell::exec_env() {
     local env; env=( $(eval $(shell::from_array 1)) ); shift
     local cmd="${1}"; shift
