@@ -67,13 +67,14 @@ shell::eval() {
 }
 
 shell::source() {
-    local file="${1}"
+    local file="${1}"; shift
+    local args="${*}"
 
     echo eval " \
     if file::is_readable ${file}; then \
-        print::debug \"${file}: Begin\"; \
-        source ${file}; \
-        print::debug \"${file}: End\"; \
+        print::debug \"file=${file} args={${args}}: Begin\"; \
+        source ${file} ${args}; \
+        print::debug \"file=${file} args]{${args}}: End\"; \
     fi \
     "
 }
