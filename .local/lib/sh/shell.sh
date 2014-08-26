@@ -56,8 +56,12 @@ shell::from_array() {
 }
 
 shell::eval() {
-    local fn="${1}"; shift 1
-    local args="${*}"
+    local fn="${1}"
+    local args=
+    if ((1 < ${#})); then
+        shift 1
+        args="${*}"
+    fi
 
     print::debug "${fn}(${args}): Begin"
     eval ${fn} ${args}
@@ -67,8 +71,12 @@ shell::eval() {
 }
 
 shell::source() {
-    local file="${1}"; shift
-    local args="${*}"
+    local file="${1}"
+    local args=
+    if ((1 < ${#})); then
+        shift 1
+        args="${*}"
+    fi
 
     echo eval " \
     if file::is_readable ${file}; then \
@@ -84,8 +92,12 @@ shell::popd() { popd >/dev/null }
 
 shell::exec_env() {
     local env; env=( $(eval $(shell::from_array 1)) ); shift
-    local cmd="${1}"; shift
-    local args="${*}"
+    local cmd="${1}"
+    local args=
+    if ((1 < ${#})); then
+        shift 1
+        args="${*}"
+    fi
 
     print::debug "(env={${env[@]}} cmd=${cmd} args={${args}}): Begin"
     eval /usr/bin/env "${env[@]}" ${cmd} ${args}
@@ -95,8 +107,12 @@ shell::exec_env() {
 }
 
 shell::exec() {
-    local cmd="${1}"; shift
-    local args="${*}"
+    local cmd="${1}"
+    local args=
+    if ((1 < ${#})); then
+        shift 1
+        args="${*}"
+    fi
 
     local nil_env; nil_env=( )
     shell::exec_env $(shell::as_array nil_env) ${cmd} ${args}
