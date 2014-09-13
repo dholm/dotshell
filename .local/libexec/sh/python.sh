@@ -56,6 +56,9 @@ python::_setup_pip() {
     export PIP_REQUIRE_VIRTUALENV=true
     export PIP_DOWNLOAD_CACHE="$HOME/.cache/pip"
 
+    export PIPAPP_DIR="${HOME}/.local/libexec/pip-apps"
+    $(shell::source "${HOME}/.dotfiles/external/pip-app/pip-app.sh")
+
     path::has_binary pip2 && alias::add syspip2 "python::exec_pip_version 2"
     path::has_binary pip3 && alias::add syspip3 "python::exec_pip_version 3"
 
