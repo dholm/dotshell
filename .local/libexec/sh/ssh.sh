@@ -85,6 +85,5 @@ ssh::nohostkey() {
 }
 
 ssh::setup() {
-    alias::add ssh ssh::wrapper
 }
 shell::eval ssh::setup
