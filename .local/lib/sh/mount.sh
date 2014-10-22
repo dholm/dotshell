@@ -24,5 +24,16 @@ mount::sshfs() {
         return 1
     fi
 
-    shell::exec $(path::to sshfs) "${user}@${host}:${remote_path}" "${mount_point}"
+    local sshfs_args="-o cache=yes"
+    sshfs_args="${sshfs_args},kernel_cache"
+    sshfs_args="${sshfs_args},cache_timeout=60"
+
+    sshfs_args="${sshfs_args},compression=no"
+    sshfs_args="${sshfs_args},large_read"
+    sshfs_args="${sshfs_args},Ciphers=arcfour"
+
+    sshfs_args="${sshfs_args},intr"
+    sshfs_args="${sshfs_args},reconnect"
+
+    shell::exec $(path::to sshfs) "${user}@${host}:${remote_path}" "${mount_point}" ${sshfs_args}
 }
