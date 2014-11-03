@@ -1,3 +1,12 @@
+debian::dpkg::list_installed() {
+    comm -13 \
+         <(gzip -dc /var/log/installer/initial-status.gz | sed -n 's/^Package: //p' | sort) \
+         <(comm -23 \
+                <(dpkg-query -W -f='${Package}\n' | sed 1d | sort) \
+                <(apt-mark showauto | sort) \
+          )
+}
+
 debian::dpkg::build() {
     local usage="Usage:
  -c --clean             - Clean before build.
