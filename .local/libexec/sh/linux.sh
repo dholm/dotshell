@@ -75,6 +75,6 @@ debian::dpkg::build() {
         build_args="${build_args} -a${opts[arch]}"
     fi
 
-    local build_env; build_env=( DEB_BUILD_OPTIONS="${build_opts}" )
+    local build_env; build_env=( DEB_BUILD_OPTIONS="'${build_opts}'" )
     shell::exec_env $(shell::as_array build_env) ${build_cmd} ${build_args}
 }
