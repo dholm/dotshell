@@ -26,6 +26,27 @@ python::exec_pip_version() {
     shell::exec_env $(shell::as_array pipenv) ${pipbin} ${args}
 }
 
+python::upgrade_all() {
+    local version=$(( ${1:=2} ))
+
+    local pyenv; pyenv=(
+        PIP_REQUIRE_VIRTUALENV=false
+        PYTHONPATH="$(python::path ${version})"
+    )
+
+    local pybin="$(path::to python${version})"
+    print::debug "(env={${pyenv[@]}} cmd=${pybin}: Begin"
+    /usr/bin/env ${pyenv[@]} ${pybin} <(cat <<EOF
+import pip
+from subprocess import call
+
+for dist in pip.get_installed_distributions():
+    call("pip install --upgrade " + dist.project_name, shell=True)
+EOF
+)
+    print::debug "(env={${pyenv[@]}} cmd=${pybin}: End"
+}
+
 python::_site_path() {
     local python="${1}"
 
@@ -79,8 +100,14 @@ python::setup() {
     os::is_darwin && python::_setup_darwin
     path::has_binary pip && python::_setup_pip
 
-    path::has_binary python2 && alias::add python2 "python::exec_python_version 2"
-    path::has_binary python3 && alias::add python3 "python::exec_python_version 3"
+    if path::has_binary python2; then
+        alias::add python2 "python::exec_python_version 2"
+        alias::add python2::upgrade_all "python::upgrade_all 2"
+    fi
+    if path::has_binary python3; then
+        alias::add python3 "python::exec_python_version 3"
+        alias::add python3::upgrade_all "python::upgrade_all 3"
+    fi
 
     if path::has_binary python2; then
         # Add Python's bin directory to the path, in case it isn't installed in
