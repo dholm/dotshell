@@ -85,6 +85,9 @@ ssh::nohostkey() {
 }
 
 ssh::setup() {
-    :
+    local ssh_key="${HOME}/.ssh/id_rsa"
+    if path::has_binary keychain && [[ -r "${ssh_key}" ]]; then
+        shell::exec keychain --quick --quiet "${ssh_key}"
+    fi
 }
 shell::eval ssh::setup
