@@ -24,3 +24,10 @@ compiler::dump_flags() {
 
     compiler::_dump ${compiler_bin} "${compiler_args} -Q -v"
 }
+
+compiler::dump_includes() {
+    local compiler_bin="${1}"; shift
+    local compiler_args="${*}"
+
+    shell::exec ${compiler_bin} -w -H ${compiler_args}
+}
