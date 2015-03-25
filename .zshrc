@@ -1,4 +1,4 @@
-if [[ $- != *i* ]]; then
+if [[ $- != *i* ]] || [[ "${TERM:=dumb}" == "dumb" ]]; then
     # Shell is non-interactive, skip everything from this point.
     return
 fi
