@@ -6,7 +6,7 @@ connect::add() {
 
     if url::is_valid ${url}; then
         print::debug "Adding ${name} (${url}) to host table"
-        eval $(alist::add _connect_host_table ${name} ${url})
+        shell::eval $(alist::add _connect_host_table ${name} ${url})
         return 0
     else
         print::error "Url ${url} failed validation!"
