@@ -3,6 +3,13 @@ export _package_env; _package_env=(
     LDFLAGS="'-L${HOME}/.local/lib -Wl,-rpath=${HOME}/.local/lib'"
 )
 
+package::exec() {
+    local cmd="${1}"; shift
+    local args="${*}"
+
+    shell::exec_env $(shell::as_array _package_env) ${cmd} ${args}
+}
+
 package::configure() {
     local args="${*}"
 
@@ -15,7 +22,7 @@ package::configure() {
         ${args}
     )
 
-    shell::exec_env $(shell::as_array _package_env) ./configure ${configure_args[@]}
+    package::exec ./configure ${configure_args[@]}
 }
 
 package::cmake() {
@@ -28,5 +35,5 @@ package::cmake() {
         ${args}
     )
 
-    shell::exec_env $(shell::as_array _package_env) cmake ${cmake_args}
+    package::exec cmake ${cmake_args}
 }
