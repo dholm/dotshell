@@ -1,9 +1,3 @@
-if [[ $- != *i* ]] || [[ "${TERM:=dumb}" == "dumb" ]]; then
-    # Shell is non-interactive, skip everything from this point.
-    return
-fi
-
-
 . "${HOME}/.shellrc"
 
 
@@ -29,7 +23,7 @@ bashrc::bash_it() {
         fi
     done
 }
-shell::eval bashrc::bash_it
+shell::is_dumb || shell::eval bashrc::bash_it
 
 
 bashrc::history() {
@@ -46,7 +40,7 @@ bashrc::liquidprompt() {
     local liquidprompt="${HOME}/.dotfiles/external/liquidprompt/liquidprompt"
     $(shell::source "${liquidprompt}")
 }
-shell::eval bashrc::liquidprompt
+shell::is_dumb || shell::eval bashrc::liquidprompt
 
 
 $(shell::source "${HOME}/.bashrc.local")

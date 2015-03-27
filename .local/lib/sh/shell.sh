@@ -25,6 +25,10 @@ shell::is_non_interactive() {
     [[ $- != *i* ]]
 }
 
+shell::is_dumb() {
+    shell::is_non_interactive || [[ "${TERM:=dumb}" == "dumb" ]]
+}
+
 shell::has_function() {
     local name="${1}"
     if shell::is_zsh; then

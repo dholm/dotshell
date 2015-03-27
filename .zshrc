@@ -1,8 +1,3 @@
-if [[ $- != *i* ]] || [[ "${TERM:=dumb}" == "dumb" ]]; then
-    # Shell is non-interactive, skip everything from this point.
-    return
-fi
-
 . "${HOME}/.shellrc"
 
 
@@ -10,7 +5,7 @@ zshrc::zsh_completions() {
     local zsh_completions="/usr/local/share/zsh-completions"
     file::is_readable ${zsh_completions} && fpath[1,0]=( ${zsh_completions} )
 }
-shell::eval zshrc::zsh_completions
+shell::is_dumb || shell::eval zshrc::zsh_completions
 
 
 zshrc::history() {
@@ -28,7 +23,7 @@ zshrc::antigen() {
     # Load bundles from oh-my-zsh
     antigen use oh-my-zsh
 }
-shell::eval zshrc::antigen
+shell::is_dumb || shell::eval zshrc::antigen
 
 
 zshrc::antigen_bundles() {
@@ -74,19 +69,19 @@ EOB
     os::is_darwin && antigen bundle osx
     path::has_binary brew && antigen bundle brew
 }
-shell::eval zshrc::antigen_bundles
+shell::is_dumb || shell::eval zshrc::antigen_bundles
 
 
 zshrc::liquidprompt() {
-    [[ "${TERM}" != "dumb" ]] && antigen bundle nojhan/liquidprompt
+    antigen bundle nojhan/liquidprompt
 }
-shell::eval zshrc::liquidprompt
+shell::is_dumb || shell::eval zshrc::liquidprompt
 
 
 zshrc::syntax_highlighting() {
     antigen bundle zsh-users/zsh-syntax-highlighting
 }
-shell::eval zshrc::syntax_highlighting
+shell::is_dumb || shell::eval zshrc::syntax_highlighting
 
 
 zshrc::dumb_terminal() {
@@ -97,9 +92,8 @@ zshrc::dumb_terminal() {
     unsetopt prompt_subst
     shell::has_function precmd && unfunction precmd
     shell::has_function preexec && unfunction preexec
-    PS1='$ '
 }
-[[ "${TERM}" == "dumb" ]] && zshrc::dumb_terminal
+shell::is_dumb && shell::eval zshrc::dumb_terminal
 
 
 $(shell::source "${HOME}/.zshrc.local")
@@ -108,7 +102,7 @@ $(shell::source "${HOME}/.zsh_aliases.local")
 
 ###
 # Apply antigen
-antigen apply
+shell::is_dumb || shell::eval antigen apply
 
 
 if ((PROFILE)); then

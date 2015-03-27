@@ -23,7 +23,7 @@ _shellrc_libexec="${HOME}/.local/libexec/sh"
 shellrc::module::load() {
     local module="${1}"
 
-    echo eval " \
+    shell::is_dumb || echo eval " \
     \$(shell::source ${_shellrc_libexec}/${module}.sh); \
     "
 }
@@ -100,8 +100,6 @@ shellrc::alias_setup() {
 }
 shell::eval shellrc::alias_setup
 
-###
-# Setup modules.
 if os::is_linux; then
     $(shellrc::module::load linux)
 elif os::is_darwin; then
@@ -127,6 +125,10 @@ path::has_binary ocaml && $(shellrc::module::load ocaml)
 path::has_binary R && $(shellrc::module::load R)
 path::has_binary go && $(shellrc::module::load go)
 
+shellrc::dumb_terminal() {
+    PS1='$ '
+}
+shell::is_dumb && shell::eval shellrc::dumb_terminal
 
 ###
 # Load local configuration.
