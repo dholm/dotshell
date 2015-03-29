@@ -42,3 +42,11 @@ string::join() {
 
     echo "${joined}"
 }
+
+string::filter_escape() {
+    local gsed="sed"
+    if os::is_darwin; then
+        gsed="$(brew --prefix)/bin/gsed"
+    fi
+    ${gsed} -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
+}

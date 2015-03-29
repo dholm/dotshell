@@ -3,7 +3,7 @@ profile::start() {
     local date="date"
     if os::is_darwin; then
         sed="sed"
-        date="/usr/local/bin/gdate"
+        date="$(brew --prefix)/bin/gdate"
     fi
 
     exec 3>&2 2> >(
@@ -41,7 +41,20 @@ profile::report() {
                 ${ctot:0:${#ctot}-9}.${ctot:${#ctot}-9}
             last=${tim//.}
       done < ${sample_file}.tim
-    ) ${sample_file}.log
+    ) ${sample_file}.log \
+        | string::filter_escape \
+        | awk '{
+              if (min=="") {min=max=$1};
+              if ($1>max) {max=$1};
+              if($1<min) {min=$1};
+              total+=$1;
+              count+=1;
+              print$0;
+            }
+            END {
+              print "--------------------------"
+              printf "avg=%12.9f max=%12.9f min=%12.9f", total/count, max, min
+            }'
 }
 
 if ((PROFILE)); then
