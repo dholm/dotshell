@@ -12,6 +12,7 @@ profile::start() {
             ${date} -f - +%s.%N >/tmp/${USER}-shellrc.${$}.tim
     )
     if shell::is_bash; then
+        export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
         set -x
     elif shell::is_zsh; then
         setopt xtrace prompt_subst
