@@ -1,19 +1,6 @@
 . "${HOME}/.shellrc"
 
 
-zshrc::zsh_completions() {
-    local zsh_completions="/usr/local/share/zsh-completions"
-    file::is_readable ${zsh_completions} && fpath[1,0]=( ${zsh_completions} )
-}
-shell::is_dumb || shell::eval zshrc::zsh_completions
-
-
-zshrc::history() {
-    alias zhistory="builtin history -di 1"
-}
-shell::eval zshrc::history
-
-
 zshrc::antigen() {
     ###
     # Setup antigen
@@ -24,6 +11,23 @@ zshrc::antigen() {
     antigen use oh-my-zsh
 }
 shell::is_dumb || shell::eval zshrc::antigen
+
+
+zshrc::history() {
+    alias zhistory="builtin history -di 1"
+}
+shell::eval zshrc::history
+
+
+zshrc::zsh_completions() {
+    local zsh_completions="/usr/local/share/zsh-completions"
+    if file::is_readable ${zsh_completions}; then
+        fpath[1,0]=( ${zsh_completions} )
+
+        antigen bundle zsh-users/zsh-completions src
+    fi
+}
+shell::is_dumb || shell::eval zshrc::zsh_completions
 
 
 zshrc::antigen_bundles() {
