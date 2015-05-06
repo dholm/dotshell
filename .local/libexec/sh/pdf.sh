@@ -16,3 +16,14 @@ pdf::to_eps() {
     done
     shell::exec rm -f "${cropped}"
 }
+
+pdf::to_emf() {
+    local pdf="${1}"
+
+    local name="$(basename "${pdf}")"
+    local cropped=".${name%.*}.tmp.pdf"
+
+    shell::exec pdfcrop "${pdf}" "${cropped}" >/dev/null
+    shell::exec pstoedit -split -pta "${cropped}" "${name%.*}.%d.emf"
+    shell::exec rm -f "${cropped}"
+}
