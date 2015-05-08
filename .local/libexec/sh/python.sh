@@ -90,6 +90,17 @@ python::_setup_pip() {
     fi
 }
 
+python::_setup_zsh() {
+    if os::is_darwin; then
+        if path::has_binary brew; then
+            local zpython_path="$(homebrew::prefix)/lib/zpython"
+            module_path=( ${module_path} ${zpython_path} )
+        fi
+        zmodload zsh/zpython &>/dev/null
+    else
+        zmodload libzpython &>/dev/null
+    fi
+}
 
 python::setup() {
     export VIRTUALENV_DISTRIBUTE=true
@@ -99,6 +110,8 @@ python::setup() {
 
     os::is_darwin && python::_setup_darwin
     path::has_binary pip && python::_setup_pip
+
+    shell::is_zsh && python::_setup_zsh
 
     if path::has_binary python2; then
         alias::add python2 "python::exec_python_version 2"
