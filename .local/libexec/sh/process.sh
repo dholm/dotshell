@@ -31,3 +31,10 @@ process::hangup() {
 
     return 0
 }
+
+process::lstree() {
+    local cmd="ps"
+    local args="auxf"
+
+    shell::exec ${cmd} ${args}
+}
