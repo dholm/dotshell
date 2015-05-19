@@ -13,9 +13,7 @@ _shellrc_libexec="${HOME}/.local/libexec/sh"
 . "${_shellrc_lib}/string.sh"
 . "${_shellrc_lib}/path.sh"
 . "${_shellrc_lib}/keyboard.sh"
-. "${_shellrc_lib}/process.sh"
 . "${_shellrc_lib}/service.sh"
-. "${_shellrc_lib}/network.sh"
 . "${_shellrc_lib}/mount.sh"
 . "${_shellrc_lib}/alias.sh"
 . "${_shellrc_lib}/url.sh"
@@ -110,7 +108,9 @@ fi
 $(shellrc::module::load editor)
 $(shellrc::module::load connect)
 $(shellrc::module::load compiler)
+$(shellrc::module::load network)
 $(shellrc::module::load package)
+$(shellrc::module::load process)
 
 path::has_binary dircolors && $(shellrc::module::load dircolors)
 path::has_binary fc-list && $(shellrc::module::load fontconfig)
