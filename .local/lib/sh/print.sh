@@ -18,23 +18,28 @@ print::pen_color() {
     esac
 }
 
-print::pen_format() {
-    local format="${1}"
+print::pen_style() {
+    local style="${1}"
 
-    case "${format}" in
+    case "${style}" in
         normal) tput sgr0;;
+        standout) tput smso;;
         bold) tput bold;;
+        dim) tput dim;;
+        reverse) tput rev;;
+        blink) tput blink;;
         underline) tput smul;;
+        hidden) tput invis;;
     esac
 }
 
 print::error() {
     echo -e "\
-$(print::pen_format bold)\
+$(print::pen_style bold)\
 $(print::pen_color fg red)\
 $(eval ${caller}):\
 ${*}\
-$(print::pen_format normal)" 1>&2
+$(print::pen_style normal)" 1>&2
 }
 
 print::warning() {
@@ -42,7 +47,7 @@ print::warning() {
 $(print::pen_color fg yellow)\
 $(eval ${caller}):\
 ${*}\
-${print::pen_format normal}" 1>&2
+${print::pen_style normal}" 1>&2
 }
 
 print::info() {
@@ -50,7 +55,7 @@ print::info() {
 $(print::pen_color fg green)\
 $(eval ${caller}):\
 ${*}\
-$(print::pen_format normal)" 1>&2
+$(print::pen_style normal)" 1>&2
 }
 
 print::debug() {
@@ -59,6 +64,6 @@ print::debug() {
 $(print::pen_color fg grey)\
 $(eval ${caller}):\
 ${*}\
-$(print::pen_format normal)" 1>&2
+$(print::pen_style normal)" 1>&2
     fi
 }
