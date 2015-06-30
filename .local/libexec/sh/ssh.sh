@@ -84,10 +84,17 @@ ssh::nohostkey() {
     shell::exec $(path::to ssh) ${args}
 }
 
-ssh::setup() {
-    local ssh_key="${HOME}/.ssh/id_rsa"
-    if path::has_binary keychain && [[ -r "${ssh_key}" ]]; then
-        shell::exec keychain --quick --quiet "${ssh_key}"
+ssh::keychain::setup() {
+    local dotssh="${HOME}/.ssh"
+    local ssh_keys="$(file::exists "${dotssh}/id_*" "${dotssh}/*.rsa" | grep -v \.pub)"
+
+    shell::eval $(keychain --eval --quiet)
+    if file::exists ${ssh_keys} 1>/dev/null; then
+        shell::exec keychain --quick --quiet "${ssh_keys}"
     fi
+}
+
+ssh::setup() {
+    path::has_binary keychain && shell::eval ssh::keychain::setup
 }
 shell::eval ssh::setup
