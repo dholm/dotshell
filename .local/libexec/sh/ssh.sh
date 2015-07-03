@@ -26,6 +26,21 @@ ssh::authorize_host() {
     return ${retval}
 }
 
+ssh::list_fingerprints() {
+    local file="${1}"
+
+    if ! file::is_readable "${file}"; then
+       print::error "Unable to open ${file}!"
+       return 1
+    fi
+
+    while read line; do
+        if [[ -n ${line} && ${line###} = ${line} ]]; then
+            ssh-keygen -l -f /dev/stdin <<<${line}
+        fi
+    done < "${file}"
+}
+
 ssh::wrapper() {
     local usage="Usage:
  -p --password  - Force password login.
