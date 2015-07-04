@@ -100,6 +100,16 @@ zshrc::dumb_terminal() {
 shell::is_dumb && shell::eval zshrc::dumb_terminal
 
 
+zshrc::darwin_setup() {
+    if path::has_binary brew; then
+        unalias run-help
+        autoload run-help
+        HELPDIR=$(brew --prefix)/share/zsh/help
+    fi
+}
+os::is_darwin && shell::eval zshrc::darwin_setup
+
+
 $(shell::source "${HOME}/.zshrc.local")
 $(shell::source "${HOME}/.zsh_aliases.local")
 
