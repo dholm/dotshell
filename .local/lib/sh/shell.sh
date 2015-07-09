@@ -1,5 +1,9 @@
 . "$HOME/.local/lib/sh/print.sh"
 
+shell::name() {
+    shell::exec /bin/ps -p $$ -ocomm=
+}
+
 shell::is_zsh() {
     test -n "${ZSH_VERSION}"
 }
