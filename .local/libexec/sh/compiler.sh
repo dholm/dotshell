@@ -31,3 +31,10 @@ compiler::dump_includes() {
 
     shell::exec ${compiler_bin} -w -H ${compiler_args}
 }
+
+compiler::find_typedef() {
+    local name="${1}"
+    local search_path="${2:-/usr/include}"
+
+    shell::exec egrep -r "'typedef.*${name};'" ${search_path}
+}
