@@ -1,6 +1,10 @@
 go::setup() {
-    export GOROOT="${HOME}/.local/go"
-    path::prepend "${GOROOT}/bin"
+    if os::is_darwin; then
+        export GOROOT="$(go env GOROOT)"
+    else
+        export GOROOT="${HOME}/.local/go"
+        path::prepend "${GOROOT}/bin"
+    fi
 
     export GOPATH="${HOME}/Projects/go"
     path::prepend "${GOPATH}/bin"
