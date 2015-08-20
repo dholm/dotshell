@@ -102,8 +102,8 @@ if os::is_linux; then
     $(shellrc::module::load linux)
 elif os::is_darwin; then
     $(shellrc::module::load darwin)
-    path::has_binary brew && $(shellrc::module::load homebrew)
 fi
+path::has_binary brew && $(shellrc::module::load homebrew)
 
 $(shellrc::module::load editor)
 $(shellrc::module::load connect)

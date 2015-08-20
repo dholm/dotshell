@@ -78,3 +78,11 @@ debian::dpkg::build() {
     local build_env; build_env=( DEB_BUILD_OPTIONS="'${build_opts}'" )
     shell::exec_env $(shell::as_array build_env) ${build_cmd} ${build_args}
 }
+
+linux::setup() {
+    # If Linuxbrew is installed add it to the path so that homebrew.sh is
+    # evaluated by .shellrc.
+    local brew_path="${HOME}/.linuxbrew/bin"
+    file::is_directory ${brew_path} && path::prepend ${brew_path}
+}
+shell::eval linux::setup
