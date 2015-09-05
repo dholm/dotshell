@@ -1,31 +1,80 @@
-darwin::package_is_installed() {
+darwin::package::is_installed() {
     local name="${1}"
 
-    shell::exec pkgutil --pkg-info ${name} &>/dev/null
+    shell::exec pkgutil --pkg-info "\"${name}\"" &>/dev/null
 }
 
-darwin::package_list() {
+darwin::package::list() {
     shell::exec pkgutil --packages
 }
 
-darwin::package_info() {
+darwin::package::files() {
     local name="${1}"
 
-    if ! darwin::package_is_installed ${name}; then
-        print::error "Package ${1} is not installed!"
+    if ! darwin::package::is_installed "${name}"; then
+        print::error "Package ${name} is not installed!"
+        return 1
+    fi
+
+    local volume="$(pkgutil --pkg-info "${name}" | egrep '^volume:' | cut -d' ' -f 2-)"
+    local location="$(pkgutil --pkg-info "${name}" | egrep '^location:' | cut -d' ' -f 2-)"
+    while read -r file; do
+        echo "${volume}${location}/${file}"
+    done <<< $(pkgutil --only-files --files "${name}")
+}
+
+darwin::package::directories() {
+    local name="${1}"
+
+    if ! darwin::package::is_installed "${name}"; then
+        print::error "Package ${name} is not installed!"
+        return 1
+    fi
+
+    local volume="$(pkgutil --pkg-info "${name}" | egrep '^volume:' | cut -d' ' -f 2-)"
+    local location="$(pkgutil --pkg-info "${name}" | egrep '^location:' | cut -d' ' -f 2-)"
+    while read -r file; do
+        echo "${volume}${location}/${file}"
+    done <<< $(pkgutil --only-dirs --files "${name}")
+}
+
+darwin::package::info() {
+    local name="${1}"
+
+    if ! darwin::package::is_installed "${name}"; then
+        print::error "Package ${name} is not installed!"
         return 1
     fi
 
     echo "* Summary"
-    shell::exec pkgutil --pkg-info ${name}
+    shell::exec pkgutil --pkg-info "\"${name}\""
     echo "* Files"
-    shell::exec pkgutil --files ${name}
+    darwin::package::files "${name}"
 }
 
-darwin::package_owner() {
+darwin::package::owner() {
     local path="${1}"
 
-    shell::exec pkgutil --file-info ${path}
+    shell::exec pkgutil --file-info "\"${path}\""
+}
+
+darwin::package::uninstall() {
+    local name="${1}"
+
+    if ! darwin::package::is_installed "${name}"; then
+        print::error "Package ${name} is not installed!"
+        return 1
+    fi
+
+    while read -r file; do
+        sudo rm -f "${file}"
+    done <<< $(darwin::package::files "${name}")
+
+    while read -r file; do
+        sudo rmdir "${file}"
+    done <<< $(darwin::package::directories "${name}")
+
+    sudo pkgutil --forget "${name}"
 }
 
 darwin::setup() {
