@@ -21,6 +21,8 @@ homebrew::setup() {
     path::prepend "$brew_prefix/bin"
     path::prepend "$brew_prefix/sbin"
 
+    export MANPATH="$(brew --prefix)/share/man:${MANPATH}"
+
     local packages; packages=( $(fn::filter 'homebrew::package_installed $1' \
         ruby python python3 go) )
     for package in ${packages[@]}; do
