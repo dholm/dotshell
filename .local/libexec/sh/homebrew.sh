@@ -29,7 +29,7 @@ homebrew::setup() {
         path::prepend "$(homebrew::package_prefix ${package})/bin"
     done
 
-    if homebrew::package_installed libxml2; then
+    if os::is_darwin && homebrew::package_installed libxml2; then
         local libxml2_prefix="$(homebrew::package_prefix libxml2)"
         export PKG_CONFIG_PATH="${libxml2_prefix}/lib/pkgconfig:${PKG_CONFIG_PATH}"
         export ACLOCAL_PATH="${libxml2_prefix}/share/aclocal:${ACLOCAL_PATH}"
