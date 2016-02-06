@@ -78,7 +78,7 @@ darwin::package::uninstall() {
 }
 
 darwin::setup() {
-    path::prepend /usr/texbin
+    path::prepend /Library/TeX/texbin
     path::prepend /opt/X11/bin
 
     local server_prefix="/Applications/Server.app/Contents/ServerRoot"
