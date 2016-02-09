@@ -38,3 +38,17 @@ compiler::find_typedef() {
 
     shell::exec egrep -r "'typedef.*${name};'" ${search_path}
 }
+
+compiler::disassemble_functions() {
+    local binary="${1}"; shift
+    local -a functions; functions=( ${*} )
+
+    local args="-nh -batch -quiet -ex 'file ${binary}'"
+    args+=" -ex 'set disassembly-flavor intel'"
+
+    for fun in ${functions[@]}; do
+        args+=" -ex 'disassemble /m ${fun}'"
+    done
+
+    shell::exec gdb ${args}
+}
