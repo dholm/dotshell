@@ -68,3 +68,7 @@ network::dns::resolve() {
     local dig_args="+short @${ns[1]}"
     shell::exec dig ${dig_args} ${host}
 }
+
+network::protocol::statistics() {
+    shell::exec netstat -s
+}
