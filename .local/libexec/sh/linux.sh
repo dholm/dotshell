@@ -41,7 +41,7 @@ debian::dpkg::build() {
         shift
     done
 
-    local build_args="-us -uc"
+    local build_args="-b -us -uc"
     if ! ${opts[clean]}; then
         print::debug "Not cleaning before build."
         build_args="${build_args} -nc"
