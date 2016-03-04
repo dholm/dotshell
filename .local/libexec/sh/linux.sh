@@ -71,8 +71,10 @@ debian::dpkg::build() {
     local build_cmd="$(path::to dpkg-buildpackage)"
     if [[ "$(uname -m)" != "${opts[arch]}" ]]; then
         print::debug "Cross compiling for ${opts[arch]}."
-        build_cmd="$(path::to debuild)"
-        build_args="${build_args} -a${opts[arch]}"
+        build_cmd="$(path::to pdebuild)"
+        build_args="--debbuildopts \"${build_args}\""
+        build_args="--buildresult ${PWD}/.. ${build_args}"
+        build_args="--architecture ${opts[arch]} ${build_args}"
     fi
 
     local build_env; build_env=( DEB_BUILD_OPTIONS="'${build_opts}'" )
