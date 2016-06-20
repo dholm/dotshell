@@ -3,13 +3,14 @@ print::pen_color() {
     local color="${2}"
 
     case "${color}" in
+        black) color=0;;
         red) color=1;;
         green) color=2;;
         yellow) color=3;;
         blue) color=4;;
-        pink) color=5;;
+        magenta) color=5;;
         cyan) color=6;;
-        grey) color=7;;
+        white) color=7;;
     esac
 
     case "${fg_bg}" in
@@ -61,7 +62,7 @@ $(print::pen_style normal)" 1>&2
 print::debug() {
     if ((DEBUG)); then
         echo -e "\
-$(print::pen_color fg grey)\
+$(print::pen_color fg white)\
 $(eval ${caller}):\
 ${*}\
 $(print::pen_style normal)" 1>&2
