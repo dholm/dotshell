@@ -1,3 +1,7 @@
+if ((PROFILE)); then
+    zmodload zsh/zprof
+fi
+
 . "${HOME}/.shellrc"
 
 
@@ -117,8 +121,3 @@ $(shell::source "${HOME}/.zsh_aliases.local")
 ###
 # Apply antigen
 shell::is_dumb || shell::eval antigen apply
-
-
-if ((PROFILE)); then
-    profile::stop
-fi
