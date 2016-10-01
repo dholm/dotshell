@@ -30,7 +30,6 @@ shellrc::path_setup() {
     path::prepend /usr/local/bin
     path::prepend /usr/local/sbin
 
-    path::has_binary npm && path::prepend "$(npm prefix --global)/bin"
     path::prepend "/opt/cabal/bin"
 
     path::prepend "${HOME}/.local/bin"
