@@ -8,6 +8,8 @@ fi
 zshrc::antigen() {
     ###
     # Setup antigen
+    # Disable cache as it breaks history, liquidprompt etc.
+    export _ANTIGEN_CACHE_ENABLED=false
     export ADOTDIR="${HOME}/.cache/antigen"
     $(shell::source "${HOME}/.zsh.d/bundle/antigen/antigen.zsh")
 
