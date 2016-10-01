@@ -18,16 +18,10 @@ homebrew::package_installed() {
 
 homebrew::setup() {
     local brew_prefix="$(brew --prefix)"
-    path::prepend "$brew_prefix/bin"
-    path::prepend "$brew_prefix/sbin"
+    path::prepend "${brew_prefix}/bin"
+    path::prepend "${brew_prefix}/sbin"
 
-    export MANPATH="$(brew --prefix)/share/man:${MANPATH}"
-
-    local packages; packages=( $(fn::filter 'homebrew::package_installed $1' \
-        ruby python python3 go) )
-    for package in ${packages[@]}; do
-        path::prepend "$(homebrew::package_prefix ${package})/bin"
-    done
+    export MANPATH="${brew_prefix}/share/man:${MANPATH}"
 
     if os::is_darwin && homebrew::package_installed libxml2; then
         local libxml2_prefix="$(homebrew::package_prefix libxml2)"
