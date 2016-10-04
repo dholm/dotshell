@@ -29,7 +29,7 @@ homebrew::setup() {
         export ACLOCAL_PATH="${libxml2_prefix}/share/aclocal:${ACLOCAL_PATH}"
     fi
 
-    if brew command command-not-found-init >/dev/null; then
+    if brew command command-not-found-init &>/dev/null; then
         shell::eval "$(brew command-not-found-init)"
     fi
 }
