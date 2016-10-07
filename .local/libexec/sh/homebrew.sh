@@ -21,6 +21,9 @@ homebrew::setup() {
     path::prepend "${brew_prefix}/bin"
     path::prepend "${brew_prefix}/sbin"
 
+    # Stop running update on every command and stashing modified formulas.
+    export HOMEBREW_DEVELOPER=1
+
     export MANPATH="${brew_prefix}/share/man:${MANPATH}"
 
     if os::is_darwin && homebrew::package_installed libxml2; then
