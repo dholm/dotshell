@@ -21,6 +21,10 @@ shell::is_dumb || shell::eval zshrc::antigen
 
 zshrc::history() {
     alias zhistory="builtin history -di 1"
+
+    # Allow patterns in searches by default.
+    bindkey '^R' history-incremental-pattern-search-backward
+    bindkey '^S' history-incremental-pattern-search-forward
 }
 shell::eval zshrc::history
 
