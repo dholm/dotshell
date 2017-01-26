@@ -144,3 +144,21 @@ shell::args_parse() {
     local get_opts="${cmd} -o ${short} --long ${long} -n $(eval ${caller})"
     echo "eval set -- \$(${get_opts} -- \"\${@}\")"
 }
+
+shell::bindings() {
+    local keymap="${1:-}"
+
+    if shell::is_bash; then
+        local args=( -p )
+        if [ -n "${keymap}" ]; then
+            args+=( -m "${keymap}" )
+        fi
+        bind ${args[@]}
+    elif shell::is_zsh; then
+        if [ -n "${keymap}" ]; then
+            bindkey -M "${keymap}"
+        else
+            print::error "No keymap specified!"
+        fi
+    fi
+}
