@@ -72,3 +72,10 @@ network::dns::resolve() {
 network::protocol::statistics() {
     shell::exec netstat -s
 }
+
+network::dump2pcap() {
+    local infile="${1}"
+    local outfile="${2}"
+
+    shell::exec text2pcap <(hexdump -v -e '"%06_ax  "16/1 "%02x " "\n"' "${infile}") ${outfile}
+}
