@@ -18,6 +18,10 @@ zshrc::antigen() {
 
     # Load bundles from oh-my-zsh
     antigen use oh-my-zsh
+    # Get rid of the GREP_OPTIONS deprecation warning.
+    # shellcheck disable=SC2139
+    alias grep="grep ${GREP_OPTIONS}"
+    unset GREP_OPTIONS
 }
 shell::is_dumb || shell::eval zshrc::antigen
 
