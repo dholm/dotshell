@@ -2,6 +2,7 @@ if ((PROFILE)); then
     zmodload zsh/zprof
 fi
 
+# shellcheck source=../../.shellrc
 . "${HOME}/.shellrc"
 
 
@@ -11,6 +12,8 @@ zshrc::antigen() {
     # Disable cache as it breaks history, liquidprompt etc.
     export _ANTIGEN_CACHE_ENABLED=false
     export ADOTDIR="${HOME}/.cache/antigen"
+    # shellcheck source=../../.zsh.d/bundle/antigen/antigen.zsh
+    # shellcheck disable=SC2091
     $(shell::source "${HOME}/.zsh.d/bundle/antigen/antigen.zsh")
 
     # Load bundles from oh-my-zsh
@@ -29,15 +32,7 @@ zshrc::history() {
 shell::eval zshrc::history
 
 
-zshrc::zsh_completions() {
-    local zsh_completions="/usr/local/share/zsh-completions"
-    if file::is_readable ${zsh_completions}; then
-        fpath[1,0]=( ${zsh_completions} )
-
-        antigen bundle zsh-users/zsh-completions src
-    fi
-}
-shell::is_dumb || shell::eval zshrc::zsh_completions
+shell::is_dumb || antigen bundle zsh-users/zsh-completions
 
 
 zshrc::antigen_bundles() {
@@ -111,16 +106,25 @@ shell::is_dumb && shell::eval zshrc::dumb_terminal
 
 
 zshrc::darwin_setup() {
-    if path::has_binary brew; then
+    if [ -d "/usr/share/zsh/help" ]; then
+        HELPDIR="/usr/share/zsh/help"
+    elif [ -d "/usr/local/share/zsh/help" ]; then
+        HELPDIR="/usr/local/share/zsh/help"
+    elif path::has_binary brew; then
         unalias run-help
         autoload run-help
+        # shellcheck disable=SC2034
         HELPDIR=$(brew --prefix)/share/zsh/help
     fi
 }
 os::is_darwin && shell::eval zshrc::darwin_setup
 
 
+# shellcheck source=../../.zshrc.local
+# shellcheck disable=SC2091
 $(shell::source "${HOME}/.zshrc.local")
+# shellcheck source=../../.zsh_aliases.local
+# shellcheck disable=SC2091
 $(shell::source "${HOME}/.zsh_aliases.local")
 
 
