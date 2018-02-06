@@ -85,10 +85,15 @@ EOB
 shell::is_dumb || shell::eval zshrc::antigen_bundles
 
 
-zshrc::liquidprompt() {
-    antigen bundle nojhan/liquidprompt
+zshrc::prompt() {
+    antigen bundle mafredri/zsh-async
+    antigen bundle sindresorhus/pure
+
+    # Single line prompt.
+    export prompt_newline='%666v'
+    PROMPT=" $PROMPT"
 }
-shell::is_dumb || shell::eval zshrc::liquidprompt
+shell::is_dumb || shell::eval zshrc::prompt
 
 
 zshrc::syntax_highlighting() {
