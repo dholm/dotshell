@@ -36,6 +36,16 @@ zshrc::history() {
 shell::eval zshrc::history
 
 
+zshrc::bookmarks() {
+    setopt cd_able_vars
+    if [[ -r "${HOME}/.zsh_bookmarks" ]]; then
+        # shellcheck source=../../.zsh_bookmarks
+        . "${HOME}/.zsh_bookmarks"
+    fi
+}
+shell::is_dumb || shell::eval zshrc::bookmarks
+
+
 shell::is_dumb || antigen bundle zsh-users/zsh-completions
 
 
