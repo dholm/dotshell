@@ -78,6 +78,8 @@ debian::dpkg::build() {
     fi
 
     local build_env; build_env=( DEB_BUILD_OPTIONS="'${build_opts}'" )
+    # Reset local Perl settings.
+    build_env+=( PERL5LIB= PERL_LOCAL_LIB_ROOT= PERL_MB_OPT= PERL_MM_OPT= )
     shell::exec_env $(shell::as_array build_env) ${build_cmd} ${build_args}
 }
 
