@@ -31,6 +31,32 @@ zshrc::history() {
     export HISTSIZE=100000
     export SAVEHIST=${HISTSIZE}
 
+    # Allow multiple terminal sessions to all append to one zsh
+    # command history.
+    setopt append_history
+    # Save time stamp of command and duration.
+    setopt extended_history
+    # Add commands as they are typed, don't wait until shell exit.
+    setopt inc_append_history
+    # When trimming history, lose oldest duplicates first.
+    setopt hist_expire_dups_first
+    # Do not write events to history that are duplicates of previous
+    # events.
+    setopt hist_ignore_dups
+    # Remove command line from history list when first character on
+    # the line is a space.
+    setopt hist_ignore_space
+    # When searching history don't display results already cycled
+    # through twice.
+    setopt hist_find_no_dups
+    # Remove extra blanks from each command line being added to
+    # history.
+    setopt hist_reduce_blanks
+    # Don't execute, just expand history.
+    setopt hist_verify
+    # Imports new commands and appends typed commands to history.
+    setopt share_history
+
     alias zhistory="builtin history -di 1"
 
     # Allow patterns in searches by default.
