@@ -27,6 +27,10 @@ shell::is_dumb || shell::eval zshrc::antigen
 
 
 zshrc::history() {
+    # Increase length of history.
+    export HISTSIZE=100000
+    export SAVEHIST=${HISTSIZE}
+
     alias zhistory="builtin history -di 1"
 
     # Allow patterns in searches by default.
