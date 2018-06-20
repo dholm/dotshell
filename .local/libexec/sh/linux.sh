@@ -65,7 +65,7 @@ debian::dpkg::build() {
 
     if ! ${opts[docs]}; then
         print::debug "Not building documentation."
-        build_opts="nodocs ${build_opts}"
+        build_opts="nodoc ${build_opts}"
     fi
 
     local build_cmd="$(path::to dpkg-buildpackage)"
