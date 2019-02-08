@@ -86,7 +86,10 @@ debian::dpkg::build() {
 linux::setup() {
     # If Linuxbrew is installed add it to the path so that homebrew.sh is
     # evaluated by .shellrc.
-    local brew_path="${HOME}/.linuxbrew/bin"
-    file::is_directory ${brew_path} && path::prepend ${brew_path}
+    if file::is_executable "${HOME}/.linuxbrew/bin/brew"; then
+        shell::eval "$(${HOME}/.linuxbrew/bin/brew shellenv)"
+    elif file::is_executable "/home/linuxbrew/.linuxbrew/bin/brew"; then
+        shell::eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
 }
 shell::eval linux::setup
