@@ -10,7 +10,7 @@ zshrc::antigen() {
     ###
     # Setup antigen
     # Disable cache as it breaks history, liquidprompt etc.
-    export _ANTIGEN_CACHE_ENABLED=false
+    export ANTIGEN_CACHE=false
     export ADOTDIR="${HOME}/.cache/antigen"
     # shellcheck source=../../.zsh.d/bundle/antigen/antigen.zsh
     # shellcheck disable=SC2091
