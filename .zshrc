@@ -27,6 +27,8 @@ shell::is_dumb || shell::eval zshrc::antigen
 
 
 zshrc::history() {
+    # Set path to history file.
+    export HISTFILE=~/.zsh_history
     # Increase length of history.
     export HISTSIZE=100000
     export SAVEHIST=${HISTSIZE}
