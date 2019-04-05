@@ -2,7 +2,6 @@
 	path = .bash.d/bash_it
 	url = https://github.com/revans/bash-it.git
 	branch = master
-[submodule ".zsh.d/bundle/antigen"]
-	path = .zsh.d/bundle/antigen
-	url = https://github.com/zsh-users/antigen.git
-	branch = master
+[submodule ".zsh.d/zplug"]
+	path = .zsh.d/zplug
+	url = https://github.com/zplug/zplug

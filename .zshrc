@@ -6,24 +6,19 @@ fi
 . "${HOME}/.shellrc"
 
 
-zshrc::antigen() {
+zshrc::zplug() {
     ###
-    # Setup antigen
-    # Disable cache as it breaks history, liquidprompt etc.
-    export ANTIGEN_CACHE=false
-    export ADOTDIR="${HOME}/.cache/antigen"
-    # shellcheck source=../../.zsh.d/bundle/antigen/antigen.zsh
-    # shellcheck disable=SC2091
-    $(shell::source "${HOME}/.zsh.d/bundle/antigen/antigen.zsh")
+    # Setup zplug.
+    export ZPLUG_HOME="${HOME}/.zsh.d/zplug"
+    export ZPLUG_CACHE_DIR="${HOME}/.cache/zplug"
+    export ZPLUG_REPOS="${HOME}/.local/share/zplug"
+    export ZPLUG_BIN="${HOME}/.local/bin"
+    $(shell::source "${ZPLUG_HOME}/init.zsh")
 
-    # Load bundles from oh-my-zsh
-    antigen use oh-my-zsh
-    # Get rid of the GREP_OPTIONS deprecation warning.
-    # shellcheck disable=SC2139
-    alias grep="grep ${GREP_OPTIONS}"
-    unset GREP_OPTIONS
+    # Enable self management.
+    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 }
-shell::is_dumb || shell::eval zshrc::antigen
+shell::is_dumb || shell::eval zshrc::zplug
 
 
 zshrc::history() {
@@ -78,58 +73,48 @@ zshrc::bookmarks() {
 shell::is_dumb || shell::eval zshrc::bookmarks
 
 
-shell::is_dumb || antigen bundle zsh-users/zsh-completions
+zplug "zsh-users/zsh-completions", if:"! shell::is_dumb"
 
 
-zshrc::antigen_bundles() {
-    antigen bundles <<EOB
-        command-not-found
+zshrc::zplug_bundles() {
+    zplug "plugins/command-not-found",  from:oh-my-zsh
+    zplug "plugins/cp",                 from:oh-my-zsh
+    zplug "plugins/battery",            from:oh-my-zsh
+    zplug "plugins/extract",            from:oh-my-zsh
+    zplug "plugins/dircycle",           from:oh-my-zsh
+    zplug "plugins/gnu-utils",          from:oh-my-zsh
 
-        # Copy with progress using cpv
-        cp
-
-        # Battery status
-        battery
-
-        # Extract any archive
-        extract
-
-        # Cycle through directory stack with C-<Shift>-<Left>/<Right>
-        dircycle
-
-        # Prefer GNU utils
-        gnu-utils
-EOB
-
-    file::is_directory "${HOME}/.vim/bundle/vundle" && antigen bundle vundle
-
-    for binary in rsync node npm fasd ssh-agent scala sbt ruby svn python pip; do
-        path::has_binary "${binary}" && antigen bundle "${binary}"
+    for binary in brew fasd node npm pip python rsync ruby sbt scala ssh-agent svn; do
+        path::has_binary "${binary}" && zplug "plugins/${binary}", from:oh-my-zsh
     done
 
-    path::has_binary task && antigen bundle taskwarrior
-    path::has_binary go && antigen bundles <<EOB
-        go
-        golang
-EOB
-    path::has_binary tmux && antigen bundles <<EOB
-        tmux
-        tmuxinator
-EOB
-    path::has_binary git && antigen bundles <<EOB
-        git
-        github
-EOB
-    path::has_binary hg && antigen bundle mercurial
-    os::is_darwin && antigen bundle osx
-    path::has_binary brew && antigen bundle brew
+    if path::has_binary go; then
+        zplug "plugins/go", from:oh-my-zsh
+        zplug "plugins/golang", from:oh-my-zsh
+    fi
+
+    if path::has_binary tmux; then
+        zplug "plugins/tmux", from:oh-my-zsh
+        zplug "plugins/tmuxinator", from:oh-my-zsh
+    fi
+
+    if path::has_binary git; then
+        zplug "plugins/git", from:oh-my-zsh
+        zplug "plugins/github", from:oh-my-zsh
+    fi
+
+    if path::has_binary hg; then
+        zplug "plugins/mercurial", from:oh-my-zsh
+    fi
+
+    zplug "plugins/osx", from:oh-my-zsh, if:"os::is_darwin"
 }
-shell::is_dumb || shell::eval zshrc::antigen_bundles
+shell::is_dumb || shell::eval zshrc::zplug_bundles
 
 
 zshrc::prompt() {
-    antigen bundle mafredri/zsh-async
-    antigen bundle sindresorhus/pure
+    zplug mafredri/zsh-async, from:github
+    zplug sindresorhus/pure, use:pure.zsh, from:github, as:theme
 
     # Single line prompt.
     export prompt_newline='%666v'
@@ -138,10 +123,7 @@ zshrc::prompt() {
 shell::is_dumb || shell::eval zshrc::prompt
 
 
-zshrc::syntax_highlighting() {
-    antigen bundle zsh-users/zsh-syntax-highlighting
-}
-shell::is_dumb || shell::eval zshrc::syntax_highlighting
+zplug "zsh-users/zsh-syntax-highlighting", if:"! shell::is_dumb", defer:2
 
 
 zshrc::dumb_terminal() {
@@ -180,5 +162,5 @@ $(shell::source "${HOME}/.zsh_aliases.local")
 
 
 ###
-# Apply antigen
-shell::is_dumb || shell::eval antigen apply
+# Load zplug plugins.
+shell::is_dumb || zplug load
