@@ -100,7 +100,9 @@ zshrc::zplug_bundles() {
 
     if path::has_binary git; then
         zplug "plugins/git", from:oh-my-zsh
+        zplug "plugins/git-remote-branch", from:oh-my-zsh
         zplug "plugins/github", from:oh-my-zsh
+        zplug "plugins/gitignore", from:oh-my-zsh
     fi
 
     if path::has_binary hg; then
