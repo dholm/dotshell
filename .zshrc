@@ -78,13 +78,16 @@ zplug "zsh-users/zsh-completions", if:"! shell::is_dumb"
 
 zshrc::zplug_bundles() {
     zplug "plugins/command-not-found",  from:oh-my-zsh
-    zplug "plugins/cp",                 from:oh-my-zsh
     zplug "plugins/battery",            from:oh-my-zsh
     zplug "plugins/extract",            from:oh-my-zsh
     zplug "plugins/dircycle",           from:oh-my-zsh
     zplug "plugins/gnu-utils",          from:oh-my-zsh
 
-    for binary in brew fasd node npm pip python rsync ruby sbt scala ssh-agent svn; do
+    local binaries=(brew cp cpanm docker-compose docker emacs fasd gem
+                    helm node keychain kubectl man minikube mosh nmap
+                    node npm perl pip python redis-cli rsync ruby sbt
+                    scala ssh-agent sudo svn systemd)
+    for binary in "${binaries[@]}"; do
         path::has_binary "${binary}" && zplug "plugins/${binary}", from:oh-my-zsh
     done
 
