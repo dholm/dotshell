@@ -40,6 +40,10 @@ zshrc::history() {
     # Do not write events to history that are duplicates of previous
     # events.
     setopt hist_ignore_dups
+    # Delete old entry if new one is a duplicate.
+    setopt hist_ignore_all_dups
+    # Don't write duplicate entries in the history file.
+    setopt hist_save_no_dups
     # Remove command line from history list when first character on
     # the line is a space.
     setopt hist_ignore_space
