@@ -58,14 +58,15 @@ debian::dpkg::build() {
         build_opts="parallel=${opts[parallel]} ${build_opts}"
     fi
 
+    local build_profiles=""
     if ! ${opts[test]}; then
         print::debug "Avoiding tests when possible."
-        build_opts="nocheck ${build_opts}"
+        build_profiles="nocheck ${build_profiles}"
     fi
 
     if ! ${opts[docs]}; then
         print::debug "Not building documentation."
-        build_opts="nodoc ${build_opts}"
+        build_profiles="nodoc ${build_profiles}"
     fi
 
     local build_cmd="$(path::to dpkg-buildpackage)"
@@ -78,6 +79,7 @@ debian::dpkg::build() {
     fi
 
     local build_env; build_env=( DEB_BUILD_OPTIONS="'${build_opts}'" )
+    build_env=( DEB_BUILD_PROFILES="'${build_profiles}'" )
     # Reset local Perl settings.
     build_env+=( PERL5LIB= PERL_LOCAL_LIB_ROOT= PERL_MB_OPT= PERL_MM_OPT= )
     shell::exec_env $(shell::as_array build_env) ${build_cmd} ${build_args}
